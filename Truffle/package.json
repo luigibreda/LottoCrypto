@@ -12,7 +12,8 @@
     "vmumbai": "truffle run verify Lottery --network mumbai",
     "vmatic": "truffle run verify Lottery --network matic",
     "mmumbai": "truffle migrate --network mumbai",
-    "mmatic": "truffle migrate --network matic"
+    "mmatic": "truffle migrate --network matic",
+    "script_test": "truffle exec scripts/execute_lotto.js --network mumbai"
   },
   "keywords": [],
   "author": "",
