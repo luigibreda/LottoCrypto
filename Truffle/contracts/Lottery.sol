@@ -33,9 +33,9 @@ contract Lottery is Ownable, VRFV2Consumer, ReentrancyGuard {
 
     mapping(uint256 => mapping(address => User)) ticketOwners;
     mapping(uint256 => mapping(uint256 => address)) tickets;
+    mapping(uint256 => LotteryStruct) lottery;
 
     Counters.Counter private lotteryId;
-    LotteryStruct public lottery;
     uint256 public fee;
 
     event TicketBought(address indexed buyer, uint256 price, uint256 ticketNumber);
@@ -51,18 +51,20 @@ contract Lottery is Ownable, VRFV2Consumer, ReentrancyGuard {
         uint256 _ticketPrice,
         uint256 _fee
     ) VRFV2Consumer(_subscriptionId, _cordinatorAddress, _keyHash) {
-        lottery.name = _name;
-        lottery.ticketPrice = _ticketPrice;
+        uint256 currentLottery = lotteryId.current();
+        lottery[currentLottery].name = _name;
+        lottery[currentLottery].ticketPrice = _ticketPrice;
         fee = _fee;
     }
 
     function buyTicket() external payable nonReentrant {
+        uint256 currentLottery = lotteryId.current();
         require(
-            !lottery.finalized,
+            !lottery[currentLottery].finalized,
             "This lottery has already finalized, wait for results!"
         );
         require(
-            lottery.ticketPrice == msg.value,
+            lottery[currentLottery].ticketPrice == msg.value,
             "You need to pay the exactly ticket price."
         );
         require(
@@ -70,25 +72,25 @@ contract Lottery is Ownable, VRFV2Consumer, ReentrancyGuard {
             "This address already buy a ticket."
         );
 
-        uint256 currentLottery = lotteryId.current();
-        uint256 currentLotteryPosition = lottery.ticketsCount.current();
-        lottery.ticketsCount.increment();
+        uint256 currentLotteryPosition = lottery[currentLottery].ticketsCount.current();
+        lottery[currentLottery].ticketsCount.increment();
 
         ticketOwners[currentLottery][msg.sender].hasTicket = true;
         ticketOwners[currentLottery][msg.sender].claimed = false;
         tickets[currentLottery][currentLotteryPosition] = msg.sender;
 
-        lottery.balance += msg.value;
+        lottery[currentLottery].balance += msg.value;
 
         emit TicketBought(msg.sender, msg.value, currentLottery);
     }
 
     function finalizeLottery() external onlyOwner {
-        require(!lottery.finalized, "Lottery already finalized.");
-        lottery.finalized = true;
+        uint256 currentLottery = lotteryId.current();
+        require(!lottery[currentLottery].finalized, "Lottery already finalized.");
+        lottery[currentLottery].finalized = true;
 
-        lottery.indexChainLink = requestRandomWords(1);
-        emit LotteryFinalized(msg.sender, lottery.balance, lottery.ticketsCount.current());
+        lottery[currentLottery].indexChainLink = requestRandomWords(1);
+        emit LotteryFinalized(msg.sender, lottery[currentLottery].balance, lottery[currentLottery].ticketsCount.current());
     }
 
     function fulfillRandomWords(
@@ -97,24 +99,23 @@ contract Lottery is Ownable, VRFV2Consumer, ReentrancyGuard {
     ) internal override {
         super.fulfillRandomWords(_requestId, _randomWords);
         uint256 currentLottery = lotteryId.current();
-        uint256 currentLotteryPosition = lottery.ticketsCount.current();
-        if (_requestId == lottery.indexChainLink) {
-            lottery.winner = tickets[currentLottery][
+        uint256 currentLotteryPosition = lottery[currentLottery].ticketsCount.current();
+        if (_requestId == lottery[currentLottery].indexChainLink) {
+            lottery[currentLottery].winner = tickets[currentLottery][
                 _randomWords[0] % currentLotteryPosition
             ];
         }
     }
 
     function claim() external nonReentrant {
-        require(!lottery.claimed, "The winner already claimed its prize.");
-        require(lottery.finalized, "This lottery isn't finalized yet.");
-        require(
-            lottery.winner != address(0),
-            "This lottery didn't get a winner yet."
-        );
-
         uint256 currentLottery = lotteryId.current();
 
+        require(!lottery[currentLottery].claimed, "The winner already claimed its prize.");
+        require(lottery[currentLottery].finalized, "This lottery isn't finalized yet.");
+        require(
+            lottery[currentLottery].winner != address(0),
+            "This lottery didn't get a winner yet."
+        );
         require(
             ticketOwners[currentLottery][msg.sender].hasTicket,
             "You dont have any ticket to claim here."
@@ -123,13 +124,13 @@ contract Lottery is Ownable, VRFV2Consumer, ReentrancyGuard {
             !ticketOwners[currentLottery][msg.sender].claimed,
             "You have alread claimed your prize."
         );
-        require(lottery.winner == msg.sender, "You're not the winner.");
-        lottery.claimed = true;
+        require(lottery[currentLottery].winner == msg.sender, "You're not the winner.");
+        lottery[currentLottery].claimed = true;
         ticketOwners[currentLottery][msg.sender].hasTicket = false;
         ticketOwners[currentLottery][msg.sender].claimed = true;
 
-        uint256 _feeAmount = _calcFee(lottery.balance);
-        uint256 prize = lottery.balance - _feeAmount;
+        uint256 _feeAmount = _calcFee(lottery[currentLottery].balance);
+        uint256 prize = lottery[currentLottery].balance - _feeAmount;
 
         require(resetLottery(), "Lottery needs to be reseted.");
 
@@ -140,16 +141,13 @@ contract Lottery is Ownable, VRFV2Consumer, ReentrancyGuard {
 
     function resetLottery() private returns (bool) {
         // Change the pointer to the next position.
+        uint256 currentLottery = lotteryId.current();
         lotteryId.increment();
+        uint256 nextLottery = lotteryId.current();
 
-        // clean up variables
-        lottery.balance = 0;
-        lottery.claimed = false;
-        lottery.finalized = false;
-        lottery.indexChainLink = 0;
-        lottery.winner = address(0);
-        
-        lottery.ticketsCount.reset();
+        // Get last lottery price and name to set the next one.
+        lottery[nextLottery].name = lottery[currentLottery].name;
+        lottery[nextLottery].ticketPrice = lottery[currentLottery].ticketPrice;
 
         return true;       
     }
@@ -162,8 +160,9 @@ contract Lottery is Ownable, VRFV2Consumer, ReentrancyGuard {
         external
         onlyOwner
     {
-        lottery.name = _name;
-        lottery.ticketPrice = _ticketPrice;
+        uint256 currentLottery = lotteryId.current();
+        lottery[currentLottery].name = _name;
+        lottery[currentLottery].ticketPrice = _ticketPrice;
         fee = _fee;
 
         emit ChangedProperties(msg.sender, _name, _ticketPrice, _fee);
