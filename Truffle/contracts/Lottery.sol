@@ -18,24 +18,22 @@ contract Lottery is Ownable, VRFV2Consumer, ReentrancyGuard {
         bool claimed;
     }
 
-    // TODO: pegar a estrutura daqui e por na tela
     struct LotteryStruct {
         string name;
         uint256 ticketPrice;
         Counters.Counter ticketsCount;
         uint256 balance;
         bool finalized;
-        uint256 indexChainLink; // nao
+        uint256 indexChainLink;
         address winner;
-        bool claimed; // nao
+        bool claimed;
     }
-    // exibir nossa taxa
 
     mapping(uint256 => mapping(address => User)) ticketOwners;
     mapping(uint256 => mapping(uint256 => address)) tickets;
     mapping(uint256 => LotteryStruct) lottery;
 
-    Counters.Counter private lotteryId;
+    Counters.Counter public lotteryId;
     uint256 public fee;
 
     event TicketBought(address indexed buyer, uint256 price, uint256 ticketNumber);
@@ -107,30 +105,29 @@ contract Lottery is Ownable, VRFV2Consumer, ReentrancyGuard {
         }
     }
 
-    function claim() external nonReentrant {
-        uint256 currentLottery = lotteryId.current();
+    function claim(uint256 lotteryIndex) external nonReentrant {
 
-        require(!lottery[currentLottery].claimed, "The winner already claimed its prize.");
-        require(lottery[currentLottery].finalized, "This lottery isn't finalized yet.");
+        require(!lottery[lotteryIndex].claimed, "The winner already claimed its prize.");
+        require(lottery[lotteryIndex].finalized, "This lottery isn't finalized yet.");
         require(
-            lottery[currentLottery].winner != address(0),
+            lottery[lotteryIndex].winner != address(0),
             "This lottery didn't get a winner yet."
         );
         require(
-            ticketOwners[currentLottery][msg.sender].hasTicket,
+            ticketOwners[lotteryIndex][msg.sender].hasTicket,
             "You dont have any ticket to claim here."
         );
         require(
-            !ticketOwners[currentLottery][msg.sender].claimed,
+            !ticketOwners[lotteryIndex][msg.sender].claimed,
             "You have alread claimed your prize."
         );
-        require(lottery[currentLottery].winner == msg.sender, "You're not the winner.");
-        lottery[currentLottery].claimed = true;
-        ticketOwners[currentLottery][msg.sender].hasTicket = false;
-        ticketOwners[currentLottery][msg.sender].claimed = true;
+        require(lottery[lotteryIndex].winner == msg.sender, "You're not the winner.");
+        lottery[lotteryIndex].claimed = true;
+        ticketOwners[lotteryIndex][msg.sender].hasTicket = false;
+        ticketOwners[lotteryIndex][msg.sender].claimed = true;
 
-        uint256 _feeAmount = _calcFee(lottery[currentLottery].balance);
-        uint256 prize = lottery[currentLottery].balance - _feeAmount;
+        uint256 _feeAmount = _calcFee(lottery[lotteryIndex].balance);
+        uint256 prize = lottery[lotteryIndex].balance - _feeAmount;
 
         require(resetLottery(), "Lottery needs to be reseted.");
 
@@ -166,6 +163,10 @@ contract Lottery is Ownable, VRFV2Consumer, ReentrancyGuard {
         fee = _fee;
 
         emit ChangedProperties(msg.sender, _name, _ticketPrice, _fee);
+    }
+
+    function getLotteryStatus(uint256 _lotteryId) public view returns(LotteryStruct memory _lottery) {
+        return lottery[_lotteryId];
     }
 
     // Only if we have some problem to use this 
