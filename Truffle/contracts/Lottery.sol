@@ -16,6 +16,7 @@ contract Lottery is Ownable, VRFV2Consumer, ReentrancyGuard {
     struct User {
         bool hasTicket;
         bool claimed;
+        Counters.Counter ticketsCount;
     }
 
     struct LotteryStruct {
@@ -65,15 +66,12 @@ contract Lottery is Ownable, VRFV2Consumer, ReentrancyGuard {
             lottery[currentLottery].ticketPrice == msg.value,
             "You need to pay the exactly ticket price."
         );
-        require(
-            !ticketOwners[lotteryId.current()][msg.sender].hasTicket,
-            "This address already buy a ticket."
-        );
 
         uint256 currentLotteryPosition = lottery[currentLottery].ticketsCount.current();
         lottery[currentLottery].ticketsCount.increment();
 
         ticketOwners[currentLottery][msg.sender].hasTicket = true;
+        ticketOwners[currentLottery][msg.sender].ticketsCount.increment();
         ticketOwners[currentLottery][msg.sender].claimed = false;
         tickets[currentLottery][currentLotteryPosition] = msg.sender;
 

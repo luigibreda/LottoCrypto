@@ -4,7 +4,7 @@ let _subscriptionId = "";
 let _coordinatorId = "";
 let _keyHash = "";
 const _name = "Lotto Crypto";
-const _ticketPrice = "1000000000000000000" // 1 ETH
+const _ticketPrice = "1000000000000000" // 0,001 ETH
 const _fee = "10" // 10%
 
 module.exports = async function (deployer, _network, accounts) {
