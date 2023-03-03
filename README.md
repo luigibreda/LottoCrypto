@@ -2,6 +2,9 @@
 
 # LottoCrypto
 Este projeto consiste em uma plataforma de loteria baseada em Blockchain, onde os participantes podem comprar ingressos usando criptomoedas e participar de sorteios para ganhar prêmios em criptomoedas. O objetivo deste projeto é criar uma plataforma de loteria justa, transparente e descentralizada que possa ser acessada por qualquer pessoa em qualquer lugar do mundo.
+
+![LottoCrypto](https://i.ibb.co/bRWj61R/image.png)
+
 ## Funcionalidades do Projeto
 
 #### Compra de ingressos:
