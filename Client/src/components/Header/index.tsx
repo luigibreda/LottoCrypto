@@ -1,4 +1,3 @@
-import Image from "next/image";
 import { motion } from "framer-motion";
 import * as S from "./styles";
 import Logo from "../Logo";

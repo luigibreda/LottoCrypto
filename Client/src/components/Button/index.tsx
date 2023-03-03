@@ -5,6 +5,7 @@ interface ButtonProps {
   theme?: string;
   color?: string;
   width?: string;
+  disabled?: boolean;
 }
 
 const Button = ({
@@ -12,10 +13,16 @@ const Button = ({
   theme = "primary",
   color = "white",
   width = "",
+  disabled = false,
 }: ButtonProps) => {
   return (
-    <S.Container themeType={theme} color={color} width={width}>
-      {children}
+    <S.Container
+      disabled={disabled}
+      themeType={theme}
+      color={color}
+      width={width}
+    >
+      <S.Text>{children}</S.Text>
     </S.Container>
   );
 };

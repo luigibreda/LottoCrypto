@@ -9,8 +9,8 @@ const Resume = () => {
       <Image
         src={"/logo-big.png"}
         alt={"LottoCrypto"}
-        width={392}
-        height={105}
+        width={370}
+        height={98}
         style={{ position: "relative", left: "-23px", top: "5px" }}
       />
       <S.TextResume>

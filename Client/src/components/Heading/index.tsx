@@ -10,8 +10,12 @@ export const H2 = styled.h2`
   font-weight: 700;
 `;
 
+export const H3 = styled.h3`
+  font-size: 1.5rem;
+`;
+
 export const P = styled.p`
   color: #afafaf;
-  font-size: 0.9rem;
+  font-size: 0.8rem;
   font-weight: 400;
 `;
