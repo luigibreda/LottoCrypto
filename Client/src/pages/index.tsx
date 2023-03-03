@@ -13,10 +13,20 @@ const poppins = Poppins({
 
 export default function HomePage() {
   useEffect(() => {
-    AuthServices.getConnectedWallet().then((res) => {
+    const tryConnect = async () => {
+      const res = await AuthServices.getConnectedWallet().catch((err) => {
+        console.log(err);
+      });
       useAuthStore.setState({ currentWallet: res });
+    };
+    tryConnect();
+
+    window.ethereum.on("accountsChanged", (accounts: string) => {
+      if (!accounts[0]) return useAuthStore.setState({ currentWallet: null });
+      useAuthStore.setState({ currentWallet: accounts[0] });
     });
   }, []);
+
   return (
     <>
       <Head>
