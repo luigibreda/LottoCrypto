@@ -8,6 +8,7 @@ export const Container = styled.div`
 `;
 
 export const Content = styled.div`
+  position: relative;
   height: calc(100vh - 100px);
   display: flex;
   width: 100%;

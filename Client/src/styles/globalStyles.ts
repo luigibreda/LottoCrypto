@@ -11,4 +11,19 @@ export const GlobalStyle = createGlobalStyle`
         background: #000;
         color: #fff;
     }
+
+    // scroll bar
+
+    ::-webkit-scrollbar {
+        width: 10px;
+    }
+
+    ::-webkit-scrollbar-track {
+        background: #000;
+    }
+
+    ::-webkit-scrollbar-thumb {
+        background: #101010;
+        border-radius: 10px;
+    }
 `;

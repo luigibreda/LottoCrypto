@@ -3,7 +3,7 @@ import styled from "styled-components";
 type ButtonProps = {
   themeType: string;
   color: string;
-  width: string;
+  width?: string;
   disabled?: boolean;
 };
 
@@ -13,7 +13,7 @@ export const Container = styled.button<ButtonProps>`
   outline: none;
   border-radius: 4px;
   color: ${({ color }) => color};
-  width: ${({ width }) => width};
+  width: 100%;
   display: flex;
   justify-content: center;
   align-items: center;

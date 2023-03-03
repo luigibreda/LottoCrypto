@@ -13,7 +13,8 @@ export const Container = styled.div`
 
 export const Navigation = styled.div`
   display: flex;
-  justify-content: space-between;
+  justify-content: center;
+  gap: 10px;
   align-items: center;
   width: 30%;
 `;

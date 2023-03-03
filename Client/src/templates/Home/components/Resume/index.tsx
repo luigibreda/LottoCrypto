@@ -1,11 +1,20 @@
-import Button from "@/components/Button";
 import { P } from "@/components/Heading";
 import Image from "next/image";
 import * as S from "./styles";
 
+import ActionButtons from "./ActionButtons";
+
 const Resume = () => {
   return (
-    <S.Container>
+    <S.Container
+      initial={{ opacity: 0, x: 50 }}
+      animate={{ opacity: 1, x: 0 }}
+      transition={{
+        type: "spring",
+        stiffness: 90,
+        damping: 40,
+      }}
+    >
       <Image
         src={"/logo-big.png"}
         alt={"LottoCrypto"}
@@ -27,14 +36,7 @@ const Resume = () => {
           start dreaming of the big cryptocurrency prize!
         </P>
       </S.TextResume>
-      <S.ButtonsContainer>
-        <Button width="50%" color="black">
-          Buy a Ticket
-        </Button>
-        <Button width="50%" theme="black">
-          Connect Wallet
-        </Button>
-      </S.ButtonsContainer>
+      <ActionButtons />
     </S.Container>
   );
 };
