@@ -1,3 +1,4 @@
+import Button from "@/components/Button";
 import { P } from "@/components/Heading";
 import Image from "next/image";
 import * as S from "./styles";
@@ -10,7 +11,7 @@ const Resume = () => {
         alt={"LottoCrypto"}
         width={392}
         height={105}
-        style={{ position: "relative", left: "-23px" }}
+        style={{ position: "relative", left: "-23px", top: "5px" }}
       />
       <S.TextResume>
         <P>
@@ -26,7 +27,14 @@ const Resume = () => {
           start dreaming of the big cryptocurrency prize!
         </P>
       </S.TextResume>
-      <S.ButtonsContainer></S.ButtonsContainer>
+      <S.ButtonsContainer>
+        <Button width="50%" color="black">
+          Buy a Ticket
+        </Button>
+        <Button width="50%" theme="black">
+          Connect Wallet
+        </Button>
+      </S.ButtonsContainer>
     </S.Container>
   );
 };

@@ -4,7 +4,7 @@ import { Poppins } from "next/font/google";
 import Home from "@/templates/Home";
 
 const poppins = Poppins({
-  weight: "400",
+  weight: "500",
   subsets: ["latin"],
 });
 
