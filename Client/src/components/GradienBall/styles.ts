@@ -16,6 +16,10 @@ export const Sphere = styled.div<SphereProps>`
   height: ${({ scaleInPx }) => scaleInPx || 100}px;
   border-radius: 50%;
   background: ${({ background }) => background || "#89FF13"};
-  opacity: 0.6;
+  opacity: 0.4;
   filter: blur(80px);
+  left: ${({ left }) => left || ""};
+  top: ${({ top }) => top || ""};
+  right: ${({ right }) => right || ""};
+  bottom: ${({ bottom }) => bottom || ""};
 `;

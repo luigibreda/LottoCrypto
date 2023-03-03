@@ -1,4 +1,4 @@
-import { Sphere } from "@/components/GradientBall/styles";
+import { Sphere } from "@/components/GradienBall/styles";
 import Header from "@/components/Header";
 import MyTickets from "./components/MyTickets";
 import Resume from "./components/Resume";
@@ -13,12 +13,13 @@ const Home = ({}: HomeProps) => {
       <Header />
       <S.Content>
         <motion.div
-          initial={{ x: 800, y: 300 }}
-          animate={{ x: 600, y: [200, 100] }}
+          initial={{ x: 600, y: 200 }}
+          animate={{ x: [600, 860, 550], y: [200, 250, 40] }}
           transition={{
             type: "spring",
-            stiffness: 60,
+            stiffness: 120,
             damping: 20,
+            duration: 2,
             repeat: Infinity,
             repeatType: "reverse",
           }}

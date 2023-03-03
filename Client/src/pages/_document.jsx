@@ -5,7 +5,7 @@ import { ServerStyleSheet } from "styled-components";
 const MyDocument = ({ initialProps, styles }) => (
   <Html>
     <Head>
-      <link rel="icon" href="https://wvwcoin.com/img/favicon.png" />
+      <link rel="icon" href="/logo.png" />
     </Head>
     <body>
       <Main />
