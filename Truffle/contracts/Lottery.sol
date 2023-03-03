@@ -16,7 +16,7 @@ contract Lottery is Ownable, VRFV2Consumer, ReentrancyGuard {
     struct User {
         bool hasTicket;
         bool claimed;
-        Counters.Counter ticketsCount;
+        uint256 [] tickets;
     }
 
     struct LotteryStruct {
@@ -71,10 +71,10 @@ contract Lottery is Ownable, VRFV2Consumer, ReentrancyGuard {
         lottery[currentLottery].ticketsCount.increment();
 
         ticketOwners[currentLottery][msg.sender].hasTicket = true;
-        ticketOwners[currentLottery][msg.sender].ticketsCount.increment();
         ticketOwners[currentLottery][msg.sender].claimed = false;
-        tickets[currentLottery][currentLotteryPosition] = msg.sender;
+        ticketOwners[currentLottery][msg.sender].tickets.push(currentLotteryPosition);
 
+        tickets[currentLottery][currentLotteryPosition] = msg.sender;
         lottery[currentLottery].balance += msg.value;
 
         emit TicketBought(msg.sender, msg.value, currentLottery);
@@ -111,6 +111,7 @@ contract Lottery is Ownable, VRFV2Consumer, ReentrancyGuard {
             lottery[lotteryIndex].winner != address(0),
             "This lottery didn't get a winner yet."
         );
+        require(lottery[lotteryIndex].winner == msg.sender, "You're not the winner.");
         require(
             ticketOwners[lotteryIndex][msg.sender].hasTicket,
             "You dont have any ticket to claim here."
@@ -119,7 +120,6 @@ contract Lottery is Ownable, VRFV2Consumer, ReentrancyGuard {
             !ticketOwners[lotteryIndex][msg.sender].claimed,
             "You have alread claimed your prize."
         );
-        require(lottery[lotteryIndex].winner == msg.sender, "You're not the winner.");
         lottery[lotteryIndex].claimed = true;
         ticketOwners[lotteryIndex][msg.sender].hasTicket = false;
         ticketOwners[lotteryIndex][msg.sender].claimed = true;
@@ -165,6 +165,10 @@ contract Lottery is Ownable, VRFV2Consumer, ReentrancyGuard {
 
     function getLotteryStatus(uint256 _lotteryId) public view returns(LotteryStruct memory _lottery) {
         return lottery[_lotteryId];
+    }
+
+    function getUserStatus(uint256 _lotteryId, address _user) public view returns(User memory _returnedUser) {
+        return ticketOwners[_lotteryId][_user];
     }
 
     // Only if we have some problem to use this 
