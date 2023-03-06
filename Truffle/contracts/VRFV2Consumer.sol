@@ -37,10 +37,10 @@ contract VRFV2Consumer is VRFConsumerBaseV2, Ownable {
     // this limit based on the network that you select, the size of the request,
     // and the processing of the callback request in the fulfillRandomWords()
     // function.
-    uint32 callbackGasLimit = 500000;
+    uint32 callbackGasLimit;
 
     // The default is 3, but you can set this higher.
-    uint16 requestConfirmations = 3;
+    uint16 requestConfirmations;
 
     constructor(uint64 subscriptionId, address cordinatorAddress, bytes32 _keyHash)
         VRFConsumerBaseV2(cordinatorAddress)
@@ -48,6 +48,8 @@ contract VRFV2Consumer is VRFConsumerBaseV2, Ownable {
         COORDINATOR = VRFCoordinatorV2Interface(cordinatorAddress);
         s_subscriptionId = subscriptionId;
         keyHash = _keyHash;
+        callbackGasLimit = 500000;
+        requestConfirmations = 3;
     }
 
     // Assumes the subscription is funded sufficiently.
@@ -78,5 +80,17 @@ contract VRFV2Consumer is VRFConsumerBaseV2, Ownable {
         require(s_requests[_requestId].exists, 'request not found');
         RequestStatus memory request = s_requests[_requestId];
         return (request.fulfilled, request.randomWords);
+    }
+
+    function setKeyHashValue(bytes32 _keyHash) external onlyOwner {
+        keyHash = _keyHash;
+    }
+
+    function setCallBackGasLimit(uint32 _callBackGasLimit) external onlyOwner {
+        callbackGasLimit = _callBackGasLimit;
+    }
+
+    function setRequestConfirmations(uint16 _requestConfirmations) external onlyOwner {
+        requestConfirmations = _requestConfirmations;
     }
 }
