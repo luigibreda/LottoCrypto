@@ -1,13 +1,13 @@
 import { AnimatePresence, motion } from "framer-motion";
 import * as S from "./styles";
 import Logo from "../Logo";
-import { useAuthStore } from "@/store/authStore";
+import { useEthersStore } from "@/store/ethersStore";
 import Image from "next/image";
 
 interface HeaderProps {}
 
 const Header = ({}: HeaderProps) => {
-  const currentWallet = useAuthStore((state) => state.currentWallet);
+  const currentWallet = useEthersStore((state) => state.currentWallet);
   return (
     <S.Container layout>
       <AnimatePresence>

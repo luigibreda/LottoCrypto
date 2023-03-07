@@ -1,34 +1,25 @@
+import ethers from "ethers";
+
 export const AuthServices = {
-  connectWallet: async () => {
-    if (!window.ethereum) {
-      alert("Please install Metamask");
-      return;
-    }
+  connect: async (provider: ethers.providers.Web3Provider) => {
     try {
-      const accounts = await window.ethereum.request({
-        method: "eth_requestAccounts",
-      });
-      const account = accounts[0];
-      if (!account) throw new Error("No account found");
-      return account;
+      const wallet = provider.send("eth_requestAccounts", []);
+      return wallet;
     } catch (error) {
       console.log(error);
+      return null;
     }
   },
-  getConnectedWallet: async () => {
-    if (!window.ethereum) {
-      alert("Please install Metamask");
-      return;
-    }
+  getConnectedWallet: async (provider: ethers.providers.Web3Provider) => {
     try {
-      const accounts = await window.ethereum.request({
-        method: "eth_accounts",
-      });
-      const account = accounts[0];
-      if (!account) throw new Error("No account found");
-      return account;
+      const accounts = await provider.listAccounts();
+      if (accounts.length > 0) {
+        return accounts[0];
+      }
+      return null;
     } catch (error) {
       console.log(error);
+      return null;
     }
   },
 };

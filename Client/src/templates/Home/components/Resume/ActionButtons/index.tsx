@@ -1,18 +1,25 @@
 import Button from "@/components/Button";
-import { useAuthStore } from "@/store/authStore";
+import { useLotto } from "@/hooks/useLotto";
+import { useEthersStore } from "@/store/ethersStore";
 import * as S from "./styles";
 
 interface ActionButtonsProps {}
 
 const ActionButtons = ({}: ActionButtonsProps) => {
-  const connectWallet = useAuthStore((state) => state.connectWallet);
-  const loading = useAuthStore((state) => state.loading);
-  const currentWallet = useAuthStore((state) => state.currentWallet);
-  const disconnectWallet = useAuthStore((state) => state.disconnectWallet);
+  const currentWallet = useEthersStore((state) => state.currentWallet);
+  const loading = useEthersStore((state) => state.loading);
+  const connectWallet = useEthersStore((state) => state.connectWallet);
+  const disconnectWallet = useEthersStore((state) => state.disconnectWallet);
+  const { buyTickey } = useLotto();
 
   return (
     <S.ButtonsContainer>
-      <Button width="50%" color="black" disabled={loading || !currentWallet}>
+      <Button
+        onClick={buyTickey}
+        width="50%"
+        color="black"
+        disabled={loading || !currentWallet}
+      >
         Buy a Ticket
       </Button>
       <Button

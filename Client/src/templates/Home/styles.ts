@@ -5,6 +5,7 @@ export const Container = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
+  justify-content: center;
 `;
 
 export const Content = styled.div`
@@ -13,4 +14,10 @@ export const Content = styled.div`
   display: flex;
   width: 100%;
   max-width: 1100px;
+
+  @media (max-width: 800px) {
+    flex-direction: column;
+    align-items: center;
+    height: auto;
+  }
 `;

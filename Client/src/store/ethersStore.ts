@@ -8,24 +8,28 @@ declare global {
   }
 }
 
-type AuthStore = {
+type EthersStore = {
+  provider: any;
+  chainId: number | null;
   currentWallet: string | null;
-  connectWallet: () => Promise<void>;
   loading: boolean;
-  disconnectWallet: () => void;
   tickets: any[];
+  connectWallet: () => Promise<void>;
+  disconnectWallet: () => void;
 };
 
-export const useAuthStore = create<AuthStore>()(
-  subscribeWithSelector((set) => ({
+export const useEthersStore = create<EthersStore>()(
+  subscribeWithSelector((set, get) => ({
+    provider: null,
     currentWallet: null,
+    chainId: null,
     loading: false,
     tickets: [],
     connectWallet: async () => {
       try {
         set({ loading: true });
-        const account = await AuthServices.connectWallet();
-        set({ currentWallet: account });
+        const wallet = await AuthServices.connect(get().provider!);
+        set({ currentWallet: wallet });
       } catch (error) {
         console.log(error);
       } finally {
@@ -38,7 +42,7 @@ export const useAuthStore = create<AuthStore>()(
   }))
 );
 
-const unsubscribeCurrentWallet = useAuthStore.subscribe(
+const unsubscribeCurrentWallet = useEthersStore.subscribe(
   (state) => state.currentWallet,
   (currentWallet) => {
     if (currentWallet) {
