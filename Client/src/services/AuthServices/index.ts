@@ -3,7 +3,7 @@ import ethers from "ethers";
 export const AuthServices = {
   connect: async (provider: ethers.providers.Web3Provider) => {
     try {
-      const wallet = provider.send("eth_requestAccounts", []);
+      const [wallet] = await provider.send("eth_requestAccounts", []);
       return wallet;
     } catch (error) {
       console.log(error);

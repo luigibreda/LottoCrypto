@@ -11,10 +11,11 @@ declare global {
 type EthersStore = {
   provider: any;
   chainId: number | null;
-  currentWallet: string | null;
+  currentWallet: string | any;
   loading: boolean;
   tickets: any[];
-  connectWallet: () => Promise<void>;
+  currentLottoInfo: any;
+  connectWallet: () => Promise<any>;
   disconnectWallet: () => void;
 };
 
@@ -24,11 +25,14 @@ export const useEthersStore = create<EthersStore>()(
     currentWallet: null,
     chainId: null,
     loading: false,
+    currentLottoInfo: null,
     tickets: [],
     connectWallet: async () => {
       try {
         set({ loading: true });
         const wallet = await AuthServices.connect(get().provider!);
+
+        if (!wallet) return;
         set({ currentWallet: wallet });
       } catch (error) {
         console.log(error);
@@ -37,7 +41,7 @@ export const useEthersStore = create<EthersStore>()(
       }
     },
     disconnectWallet: () => {
-      set({ currentWallet: null });
+      set({ currentWallet: null, tickets: [] });
     },
   }))
 );
