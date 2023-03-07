@@ -7,12 +7,14 @@ import { motion } from "framer-motion";
 import { useEthersStore } from "@/store/ethersStore";
 import NoTicket from "@/components/NoTicket";
 import { useLotto } from "@/hooks/useLotto";
+import { rightChainId } from "@/constants";
 
 const MyTickets = () => {
   const [currentTicket, setCurrentTicket] = useState(0);
   const tickets = useEthersStore((state) => state.tickets);
   const currentWallet = useEthersStore((state) => state.currentWallet);
   const currentLottoInfo = useEthersStore((state) => state.currentLottoInfo);
+  const chainId = useEthersStore((state) => state.chainId);
   const { claim } = useLotto();
 
   const userWin = currentLottoInfo?.winner.toLowerCase() == currentWallet;
@@ -51,7 +53,16 @@ const MyTickets = () => {
           ))}
         </S.Navigation>
       </motion.div>
-      <Button width="30%" disabled={!userWin} theme="black" onClick={claim}>
+      <Button
+        width="30%"
+        disabled={
+          !currentWallet ||
+          (currentWallet && !userWin) ||
+          chainId != rightChainId
+        }
+        theme="black"
+        onClick={claim}
+      >
         Claim
       </Button>
     </S.Container>
