@@ -100,6 +100,7 @@ contract Lottery is Ownable, VRFV2Consumer, ReentrancyGuard {
             lottery[currentLottery].winner = tickets[currentLottery][
                 _randomWords[0] % currentLotteryPosition
             ];
+            resetLottery();
         }
     }
 
@@ -126,8 +127,6 @@ contract Lottery is Ownable, VRFV2Consumer, ReentrancyGuard {
 
         uint256 _feeAmount = _calcFee(lottery[lotteryIndex].balance);
         uint256 prize = lottery[lotteryIndex].balance - _feeAmount;
-
-        require(resetLottery(), "Lottery needs to be reseted.");
 
         payable(owner()).transfer(_feeAmount);
         payable(msg.sender).transfer(prize);
