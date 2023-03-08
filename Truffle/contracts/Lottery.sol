@@ -37,6 +37,7 @@ contract Lottery is
         uint32 minTicket;
         bool finishTrigger;
         uint256 timeToFinish;
+        uint256 timeToClaim;
     }
 
     mapping(uint256 => mapping(address => User)) ticketOwners;
@@ -46,6 +47,7 @@ contract Lottery is
     Counters.Counter public lotteryId;
     uint256 public fee;
     uint256 public configFinishTime;
+    uint256 public configTimeToClaim;
     uint32 public minTicket;
     uint256 public ticketPrice;
     string public lotteryName;
@@ -66,14 +68,26 @@ contract Lottery is
         uint256 totalValue,
         uint256 ticketAmount
     );
-    event ClaimedPrize(address indexed winner, uint256 totalPrize, uint256 fee);
+    event ClaimedPrize(
+        address indexed winner,
+        uint256 lotteryIndex,
+        uint256 totalPrize,
+        uint256 fee
+    );
+    event ClaimedExpiredPrize(
+        address indexed winner,
+        address owner,
+        uint256 lotteryIndex,
+        uint256 totalPrize
+    );
     event ChangedProperties(
         address indexed owner,
         string name,
         uint256 ticketPrize,
         uint256 fee,
         uint32 minTicket,
-        uint256 configFinishTime
+        uint256 configFinishTime,
+        uint256 configTimeToClaim
     );
 
     constructor(
@@ -94,6 +108,7 @@ contract Lottery is
         fee = _fee;
         lotteryName = _name;
         configFinishTime = 10 minutes;
+        configTimeToClaim = 7 days;
         ticketPrice = _ticketPrice;
         minTicket = _minTicket;
     }
@@ -135,7 +150,7 @@ contract Lottery is
             lottery[currentLottery].timeToFinish =
                 block.timestamp +
                 configFinishTime;
-            
+
             emit MinTicketsReached(
                 nextLotteryPosition,
                 lottery[currentLottery].minTicket,
@@ -185,7 +200,9 @@ contract Lottery is
             lottery[currentLottery].winner = tickets[currentLottery][
                 _randomWords[0] % currentLotteryPosition
             ];
-
+            lottery[currentLottery].timeToClaim =
+                block.timestamp +
+                configFinishTime;
             require(resetLottery(), "Lottery needs to be reseted");
         }
     }
@@ -224,7 +241,31 @@ contract Lottery is
 
         payable(owner()).transfer(_feeAmount);
         payable(msg.sender).transfer(prize);
-        emit ClaimedPrize(msg.sender, prize, _feeAmount);
+        emit ClaimedPrize(msg.sender, lotteryIndex, prize, _feeAmount);
+    }
+
+    function claimExpiredLottery(uint256 lotteryIndex) external onlyOwner {
+        require(
+            !lottery[lotteryIndex].claimed,
+            "The winner already claimed its prize."
+        );
+        require(
+            lottery[lotteryIndex].finalized,
+            "This lottery isn't finalized yet."
+        );
+        require(
+            lottery[lotteryIndex].winner != address(0),
+            "This lottery didn't get a winner yet."
+        );
+        require(
+            lottery[lotteryIndex].timeToClaim < block.timestamp,
+            "You can't claim before timeToClaim get expired."
+        );
+
+        lottery[lotteryIndex].claimed = true;
+
+        payable(owner()).transfer(lottery[lotteryIndex].balance);
+        emit ClaimedExpiredPrize(lottery[lotteryIndex].winner, msg.sender, lotteryIndex, lottery[lotteryIndex].balance);
     }
 
     function resetLottery() private returns (bool) {
@@ -247,12 +288,14 @@ contract Lottery is
         uint256 _ticketPrice,
         uint32 _minTicket,
         uint256 _configFinishTime,
+        uint256 _configTimeToClaim,
         uint256 _fee
     ) external onlyOwner {
         require(_fee <= 30, "Fee can't be better than 30%");
 
         fee = _fee;
         configFinishTime = _configFinishTime;
+        configTimeToClaim = _configTimeToClaim;
         ticketPrice = _ticketPrice;
         minTicket = _minTicket;
         emit ChangedProperties(
@@ -261,7 +304,8 @@ contract Lottery is
             _ticketPrice,
             _fee,
             _minTicket,
-            _configFinishTime
+            _configFinishTime,
+            _configTimeToClaim
         );
     }
 
