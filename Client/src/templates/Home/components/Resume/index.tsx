@@ -36,6 +36,7 @@ const Resume = () => {
           start dreaming of the big cryptocurrency prize!
         </P>
       </S.TextResume>
+
       <ActionButtons />
     </S.Container>
   );

@@ -18,6 +18,6 @@ export const Content = styled.div`
   @media (max-width: 800px) {
     flex-direction: column;
     align-items: center;
-    height: auto;
+    height: 100%;
   }
 `;

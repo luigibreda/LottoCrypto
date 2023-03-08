@@ -6,17 +6,19 @@ import Image from "next/image";
 interface TicketProps {
   current: boolean;
   id: any;
-  ownerWallet: string;
+  wallet: string;
   finalized: boolean;
   ticketsCount: any;
+  isLastRound?: boolean;
 }
 
 const Ticket = ({
   current,
   id,
-  ownerWallet,
+  wallet,
   finalized,
   ticketsCount,
+  isLastRound = false,
 }: TicketProps) => {
   return (
     <>
@@ -43,12 +45,14 @@ const Ticket = ({
               height={20}
             />
             <S.Line>
-              <S.Label>Ticket Owner Wallet</S.Label>
-              <P>{ownerWallet}</P>
+              <S.Label>
+                {!isLastRound ? "Ticket Owner Wallet" : "Winner"}
+              </S.Label>
+              <P>{wallet}</P>
             </S.Line>
             <S.Line>
               <S.Label>Ticket ID</S.Label>
-              <P>{id.toNumber()}</P>
+              <P>{id?.toString() || 0}</P>
             </S.Line>
             <S.Line>
               <S.Label>Tickets sold</S.Label>

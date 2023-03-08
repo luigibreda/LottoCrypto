@@ -11,6 +11,7 @@ export const useLotto = () => {
   const { provider, signer } = useEthers();
   const lottoContractAddress = "0x26d2c3dc70ceD2dA8cB2b74A4576C93382CBb6A4";
   const [lottoContract, setLottoContract] = useState<any>(null);
+  const [error, setError] = useState<string | null>();
 
   useEffect(() => {
     if (!provider || !currentWallet || !signer || chainId != rightChainId)
@@ -26,6 +27,7 @@ export const useLotto = () => {
 
   useEffect(() => {
     if (!currentWallet || !lottoContract || chainId != rightChainId) return;
+    getLastRounds();
     getUserStatus();
   }, [currentWallet, lottoContract, chainId]);
 
@@ -59,7 +61,7 @@ export const useLotto = () => {
         });
   };
 
-  const buyTickey = async () => {
+  const buyTicket = async () => {
     if (!provider || !lottoContract) return;
     try {
       useEthersStore.setState({ loading: true });
@@ -71,7 +73,9 @@ export const useLotto = () => {
       });
       const receipt = await tx.wait();
       getUserStatus();
-    } catch (error) {
+    } catch (error: any) {
+      if (error.code == -32603)
+        return useEthersStore.setState({ error: "You dont have MATIC enough" });
       console.log(error);
     } finally {
       useEthersStore.setState({ loading: false });
@@ -93,5 +97,23 @@ export const useLotto = () => {
     }
   };
 
-  return { buyTickey, claim };
+  const getLastRounds = async () => {
+    if (!provider || !lottoContract || chainId != rightChainId) return;
+    try {
+      const lastLottery = await getLastLottery();
+      const lastLotteryId = lastLottery.indexChainLink;
+      const lastRounds = [];
+      for (let i = 0; i < 5; i++) {
+        if (lastLotteryId - i < 0) break;
+        const round = await lottoContract.getLotteryStatus(lastLotteryId - i);
+        lastRounds.push(round);
+      }
+
+      useEthersStore.setState({ lastRounds });
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  return { buyTicket, claim, error };
 };

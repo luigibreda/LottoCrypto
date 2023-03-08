@@ -15,6 +15,8 @@ type EthersStore = {
   loading: boolean;
   tickets: any[];
   currentLottoInfo: any;
+  lastRounds: any[];
+  error: string | null;
   connectWallet: () => Promise<any>;
   disconnectWallet: () => void;
 };
@@ -26,18 +28,16 @@ export const useEthersStore = create<EthersStore>()(
     chainId: null,
     loading: false,
     currentLottoInfo: null,
+    lastRounds: [],
     tickets: [],
+    error: null,
     connectWallet: async () => {
       try {
-        set({ loading: true });
         const wallet = await AuthServices.connect(get().provider!);
-
         if (!wallet) return;
         set({ currentWallet: wallet });
       } catch (error) {
         console.log(error);
-      } finally {
-        set({ loading: false });
       }
     },
     disconnectWallet: () => {

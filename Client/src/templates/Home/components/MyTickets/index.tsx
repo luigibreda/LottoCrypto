@@ -8,6 +8,7 @@ import { useEthersStore } from "@/store/ethersStore";
 import NoTicket from "@/components/NoTicket";
 import { useLotto } from "@/hooks/useLotto";
 import { rightChainId } from "@/constants";
+import { Pagination } from "@mui/material";
 
 const MyTickets = () => {
   const [currentTicket, setCurrentTicket] = useState(0);
@@ -38,20 +39,35 @@ const MyTickets = () => {
             id={ticket}
             finalized={currentLottoInfo.finalized}
             ticketsCount={currentLottoInfo.ticketsCount}
-            ownerWallet={currentWallet}
+            wallet={currentWallet}
             current={currentTicket === index}
           />
         ))}
 
-        <S.Navigation>
-          {tickets.map((ticket, index) => (
-            <S.Bullet
-              active={currentTicket == index}
-              key={index}
-              onClick={() => setCurrentTicket(index)}
-            />
-          ))}
-        </S.Navigation>
+        <Pagination
+          count={tickets.length}
+          page={currentTicket + 1}
+          sx={{
+            "& .Mui-selected": {
+              backgroundColor: "black",
+              color: "white",
+            },
+            "& .MuiPaginationItem-page": {
+              backgroundColor: "#0d0d0d",
+              color: "#f2f2f2",
+            },
+            "& .MuiPaginationItem-root": {
+              color: "#f2f2f2",
+            },
+            "& .MuiPaginationItem-root.Mui-selected": {
+              backgroundColor: "#232323",
+              color: "#89FF13",
+            },
+          }}
+          variant="outlined"
+          shape="rounded"
+          onChange={(e, page) => setCurrentTicket(page - 1)}
+        />
       </motion.div>
       <Button
         width="30%"

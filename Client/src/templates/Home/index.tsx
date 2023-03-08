@@ -4,6 +4,7 @@ import MyTickets from "./components/MyTickets";
 import Resume from "./components/Resume";
 import * as S from "./styles";
 import { motion } from "framer-motion";
+import LastRounds from "../LastRounds";
 
 interface HomeProps {}
 
@@ -15,6 +16,7 @@ const Home = ({}: HomeProps) => {
         <Resume />
         <MyTickets />
       </S.Content>
+      <LastRounds />
     </S.Container>
   );
 };
