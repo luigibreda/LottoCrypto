@@ -3,6 +3,7 @@ import { useEthersStore } from "@/store/ethersStore";
 import LottoAbi from "../../contracts/Lottery.json";
 import { ethers } from "ethers";
 import { useEffect, useState } from "react";
+import { rightChainId } from "@/constants";
 
 export const useLotto = () => {
   const chainId = useEthersStore((state) => state.chainId);
@@ -12,7 +13,8 @@ export const useLotto = () => {
   const [lottoContract, setLottoContract] = useState<any>(null);
 
   useEffect(() => {
-    if (!provider || !currentWallet || !signer) return;
+    if (!provider || !currentWallet || !signer || chainId != rightChainId)
+      return;
     const lottoContract = new ethers.Contract(
       lottoContractAddress,
       LottoAbi.abi,
@@ -23,32 +25,44 @@ export const useLotto = () => {
   }, [chainId, provider, signer]);
 
   useEffect(() => {
-    if (!currentWallet || !signer || !lottoContract) return;
-    const getUserStatus = async () => {
-      const lastLottery = await getLastLottery();
-      const ID = lastLottery.indexChainLink;
-      console.log(lottoContract);
-    };
+    if (!currentWallet || !lottoContract || chainId != rightChainId) return;
     getUserStatus();
-  }, [currentWallet, signer, lottoContract]);
+  }, [currentWallet, lottoContract, chainId]);
 
   const getLastLottery = async () => {
-    if (!provider || !lottoContract) return;
+    if (!provider || !lottoContract || chainId != rightChainId) return;
     try {
       const currentLotto = await lottoContract.lotteryId();
-
-      console.log(currentLotto);
-
       const lotteryStatus = await lottoContract.getLotteryStatus(currentLotto);
+
       return lotteryStatus;
     } catch (error) {
       console.log(error);
     }
   };
 
+  const getUserStatus = async () => {
+    if (!provider || !lottoContract || chainId != rightChainId) return;
+    const lastLottery = await getLastLottery();
+    useEthersStore.setState({ currentLottoInfo: lastLottery });
+
+    const userStatusInLastLottery = await lottoContract.getUserStatus(
+      lastLottery.indexChainLink,
+      currentWallet
+    );
+    userStatusInLastLottery.hasTicket
+      ? useEthersStore.setState({
+          tickets: [...userStatusInLastLottery.tickets],
+        })
+      : useEthersStore.setState({
+          tickets: [],
+        });
+  };
+
   const buyTickey = async () => {
     if (!provider || !lottoContract) return;
     try {
+      useEthersStore.setState({ loading: true });
       const lastLottery = await getLastLottery();
       const lotteryPrice = await lastLottery.ticketPrice;
 
@@ -56,11 +70,28 @@ export const useLotto = () => {
         value: lotteryPrice,
       });
       const receipt = await tx.wait();
-      console.log(receipt);
+      getUserStatus();
     } catch (error) {
       console.log(error);
+    } finally {
+      useEthersStore.setState({ loading: false });
     }
   };
 
-  return { buyTickey };
+  const claim = async () => {
+    if (!provider || !lottoContract) return;
+    try {
+      useEthersStore.setState({ loading: true });
+      const lastLottery = await getLastLottery();
+      const tx = await lottoContract.claim(lastLottery.indexChainLink);
+      const receipt = await tx.wait();
+      getUserStatus();
+    } catch (error) {
+      console.log(error);
+    } finally {
+      useEthersStore.setState({ loading: false });
+    }
+  };
+
+  return { buyTickey, claim };
 };

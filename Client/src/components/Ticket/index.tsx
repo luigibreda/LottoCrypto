@@ -6,11 +6,18 @@ import Image from "next/image";
 interface TicketProps {
   current: boolean;
   id: any;
+  ownerWallet: string;
+  finalized: boolean;
+  ticketsCount: any;
 }
 
-const Ticket = ({ current, id }: TicketProps) => {
-  console.log(id);
-
+const Ticket = ({
+  current,
+  id,
+  ownerWallet,
+  finalized,
+  ticketsCount,
+}: TicketProps) => {
   return (
     <>
       {current && (
@@ -37,15 +44,19 @@ const Ticket = ({ current, id }: TicketProps) => {
             />
             <S.Line>
               <S.Label>Ticket Owner Wallet</S.Label>
-              <P>0xBbF87375E6e659f76A449e79030a97abAdBC4D3e</P>
+              <P>{ownerWallet}</P>
             </S.Line>
             <S.Line>
-              <S.Label>Lottery</S.Label>
-              <P>My Ticket</P>
+              <S.Label>Ticket ID</S.Label>
+              <P>{id.toNumber()}</P>
             </S.Line>
             <S.Line>
-              <S.Label>Lottery</S.Label>
-              <P>My Ticket</P>
+              <S.Label>Tickets sold</S.Label>
+              <P>{ticketsCount && ticketsCount.toString()}</P>
+            </S.Line>
+            <S.Line>
+              <S.Label>Status</S.Label>
+              <P>{finalized ? "Finished" : "Not finished"}</P>
             </S.Line>
             <Image
               src={"/logo.png"}

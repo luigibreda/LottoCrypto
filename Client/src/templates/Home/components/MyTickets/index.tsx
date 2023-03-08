@@ -4,15 +4,24 @@ import Ticket from "@/components/Ticket";
 import { useState } from "react";
 import * as S from "./styles";
 import { motion } from "framer-motion";
-
-const tickets = [1, 2, 3];
+import { useEthersStore } from "@/store/ethersStore";
+import NoTicket from "@/components/NoTicket";
+import { useLotto } from "@/hooks/useLotto";
+import { rightChainId } from "@/constants";
 
 const MyTickets = () => {
   const [currentTicket, setCurrentTicket] = useState(0);
+  const tickets = useEthersStore((state) => state.tickets);
+  const currentWallet = useEthersStore((state) => state.currentWallet);
+  const currentLottoInfo = useEthersStore((state) => state.currentLottoInfo);
+  const chainId = useEthersStore((state) => state.chainId);
+  const { claim } = useLotto();
+
+  const userWin = currentLottoInfo?.winner.toLowerCase() == currentWallet;
 
   return (
     <S.Container>
-      <H3>My Tickets</H3>
+      <H3>{!tickets.length ? "You no have tickets" : "My tickets"}</H3>
       <motion.div
         style={{
           display: "flex",
@@ -22,8 +31,16 @@ const MyTickets = () => {
           gap: "10px",
         }}
       >
+        {!tickets.length && <NoTicket />}
         {tickets.map((ticket, index) => (
-          <Ticket key={index} id={index} current={currentTicket === index} />
+          <Ticket
+            key={index}
+            id={ticket}
+            finalized={currentLottoInfo.finalized}
+            ticketsCount={currentLottoInfo.ticketsCount}
+            ownerWallet={currentWallet}
+            current={currentTicket === index}
+          />
         ))}
 
         <S.Navigation>
@@ -36,7 +53,16 @@ const MyTickets = () => {
           ))}
         </S.Navigation>
       </motion.div>
-      <Button width="30%" disabled theme="black">
+      <Button
+        width="30%"
+        disabled={
+          !currentWallet ||
+          (currentWallet && !userWin) ||
+          chainId != rightChainId
+        }
+        theme="black"
+        onClick={claim}
+      >
         Claim
       </Button>
     </S.Container>
