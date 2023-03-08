@@ -29,6 +29,7 @@ contract Lottery is
         string name;
         uint256 ticketPrice;
         Counters.Counter ticketsCount;
+        uint256 startedTime;
         uint256 balance;
         bool finalized;
         uint256 indexChainLink;
@@ -104,6 +105,7 @@ contract Lottery is
         lottery[currentLottery].name = _name;
         lottery[currentLottery].ticketPrice = _ticketPrice;
         lottery[currentLottery].minTicket = _minTicket;
+        lottery[currentLottery].startedTime = block.timestamp;
 
         fee = _fee;
         lotteryName = _name;
@@ -275,6 +277,7 @@ contract Lottery is
         lottery[nextLottery].name = lotteryName;
         lottery[nextLottery].ticketPrice = ticketPrice;
         lottery[nextLottery].minTicket = minTicket;
+        lottery[nextLottery].startedTime = block.timestamp;
 
         return true;
     }
