@@ -46,11 +46,20 @@ contract Lottery is
     Counters.Counter public lotteryId;
     uint256 public fee;
     uint256 public configFinishTime;
+    uint32 public minTicket;
+    uint256 public ticketPrice;
+    string public lotteryName;
 
     event TicketBought(
         address indexed buyer,
         uint256 price,
         uint256 ticketNumber
+    );
+    event MinTicketsReached(
+        uint256 ticketNumber,
+        uint32 minTickets,
+        uint256 balance,
+        uint256 finishTime
     );
     event LotteryFinalized(
         address owner,
@@ -62,7 +71,9 @@ contract Lottery is
         address indexed owner,
         string name,
         uint256 ticketPrize,
-        uint256 fee
+        uint256 fee,
+        uint32 minTicket,
+        uint256 configFinishTime
     );
 
     constructor(
@@ -71,14 +82,20 @@ contract Lottery is
         bytes32 _keyHash,
         string memory _name,
         uint256 _ticketPrice,
+        uint32 _minTicket,
         uint256 _fee
     ) VRFV2Consumer(_subscriptionId, _cordinatorAddress, _keyHash) {
         uint256 currentLottery = lotteryId.current();
+
         lottery[currentLottery].name = _name;
         lottery[currentLottery].ticketPrice = _ticketPrice;
+        lottery[currentLottery].minTicket = _minTicket;
 
         fee = _fee;
-        configFinishTime = 1 days;
+        lotteryName = _name;
+        configFinishTime = 10 minutes;
+        ticketPrice = _ticketPrice;
+        minTicket = _minTicket;
     }
 
     function buyTicket() external payable nonReentrant {
@@ -118,6 +135,13 @@ contract Lottery is
             lottery[currentLottery].timeToFinish =
                 block.timestamp +
                 configFinishTime;
+            
+            emit MinTicketsReached(
+                nextLotteryPosition,
+                lottery[currentLottery].minTicket,
+                lottery[currentLottery].balance,
+                lottery[currentLottery].timeToFinish
+            );
         }
 
         emit TicketBought(msg.sender, msg.value, currentLottery);
@@ -130,7 +154,7 @@ contract Lottery is
             .current();
 
         require(
-            lottery[currentLottery].minTicket > currentLotteryPosition,
+            lottery[currentLottery].minTicket < currentLotteryPosition,
             "It Didnt reach min tickets yet."
         );
 
@@ -161,7 +185,8 @@ contract Lottery is
             lottery[currentLottery].winner = tickets[currentLottery][
                 _randomWords[0] % currentLotteryPosition
             ];
-            resetLottery();
+
+            require(resetLottery(), "Lottery needs to be reseted");
         }
     }
 
@@ -203,14 +228,12 @@ contract Lottery is
     }
 
     function resetLottery() private returns (bool) {
-        // Change the pointer to the next position.
-        uint256 currentLottery = lotteryId.current();
         lotteryId.increment();
         uint256 nextLottery = lotteryId.current();
 
-        // Get last lottery price and name to set the next one.
-        lottery[nextLottery].name = lottery[currentLottery].name;
-        lottery[nextLottery].ticketPrice = lottery[currentLottery].ticketPrice;
+        lottery[nextLottery].name = lotteryName;
+        lottery[nextLottery].ticketPrice = ticketPrice;
+        lottery[nextLottery].minTicket = minTicket;
 
         return true;
     }
@@ -222,29 +245,36 @@ contract Lottery is
     function setProperties(
         string memory _name,
         uint256 _ticketPrice,
+        uint32 _minTicket,
+        uint256 _configFinishTime,
         uint256 _fee
     ) external onlyOwner {
-        uint256 currentLottery = lotteryId.current();
-        lottery[currentLottery].name = _name;
-        lottery[currentLottery].ticketPrice = _ticketPrice;
-        fee = _fee;
+        require(_fee <= 30, "Fee can't be better than 30%");
 
-        emit ChangedProperties(msg.sender, _name, _ticketPrice, _fee);
+        fee = _fee;
+        configFinishTime = _configFinishTime;
+        ticketPrice = _ticketPrice;
+        minTicket = _minTicket;
+        emit ChangedProperties(
+            msg.sender,
+            _name,
+            _ticketPrice,
+            _fee,
+            _minTicket,
+            _configFinishTime
+        );
     }
 
-    function getLotteryStatus(uint256 _lotteryId)
-        public
-        view
-        returns (LotteryStruct memory _lottery)
-    {
+    function getLotteryStatus(
+        uint256 _lotteryId
+    ) public view returns (LotteryStruct memory _lottery) {
         return lottery[_lotteryId];
     }
 
-    function getUserStatus(uint256 _lotteryId, address _user)
-        public
-        view
-        returns (User memory _returnedUser)
-    {
+    function getUserStatus(
+        uint256 _lotteryId,
+        address _user
+    ) public view returns (User memory _returnedUser) {
         return ticketOwners[_lotteryId][_user];
     }
 
@@ -259,21 +289,16 @@ contract Lottery is
         external
         view
         override
-        returns (
-            bool upkeepNeeded,
-            bytes memory /* performData */
-        )
+        returns (bool upkeepNeeded, bytes memory /* performData */)
     {
         uint256 currentLottery = lotteryId.current();
         upkeepNeeded = (lottery[currentLottery].finishTrigger &&
             block.timestamp > lottery[currentLottery].timeToFinish);
     }
 
-    function performUpkeep(
-        bytes calldata /* performData */
-    ) external override {
+    function performUpkeep(bytes calldata /* performData */) external override {
         uint256 currentLottery = lotteryId.current();
-        
+
         require(
             (lottery[currentLottery].finishTrigger &&
                 block.timestamp > lottery[currentLottery].timeToFinish),

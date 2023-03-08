@@ -6,6 +6,7 @@ let _keyHash = "";
 const _name = "Lotto Crypto";
 const _ticketPrice = "1000000000000000" // 0,001 ETH
 const _fee = "10" // 10%
+const _minTicket = "5"
 
 module.exports = async function (deployer, _network, accounts) {
 
@@ -36,6 +37,7 @@ module.exports = async function (deployer, _network, accounts) {
         _keyHash,
         _name,
         _ticketPrice,
+        _minTicket,
         _fee,
     );
 };
