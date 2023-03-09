@@ -45,12 +45,3 @@ export const useEthersStore = create<EthersStore>()(
     },
   }))
 );
-
-const unsubscribeCurrentWallet = useEthersStore.subscribe(
-  (state) => state.currentWallet,
-  (currentWallet) => {
-    if (currentWallet) {
-      console.log("Current wallet: ", currentWallet);
-    }
-  }
-);

@@ -1,5 +1,5 @@
+import Button from "@/components/Button";
 import Header from "@/components/Header";
-import React from "react";
 import * as S from "./styles";
 
 interface AdminProps {}
@@ -15,7 +15,7 @@ const Admin = ({}: AdminProps) => {
         <S.Input type="text" placeholder="Telefone" />
         <S.Input type="text" placeholder="Endereço" />
         <S.Input type="text" placeholder="Senha" />
-        <S.Button type="submit">Salvar</S.Button>
+        <Button color="black">Salvar</Button>
       </S.Form>
     </S.Container>
   );

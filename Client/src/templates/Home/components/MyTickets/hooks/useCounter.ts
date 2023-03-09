@@ -25,10 +25,11 @@ export const useCounter = () => {
         const now = Math.floor(Date.now() / 1000);
         const timeLeftInSeconds = end - now;
         const percPercorrido = ((now - start) / (end - start)) * 100;
-
         const duration = moment.duration(timeLeftInSeconds, "seconds");
+
         if (timeLeftInSeconds <= 0) return clearInterval(counterRef.current);
         if (percPercorrido >= 100) clearInterval(counterRef.current);
+
         setTimeLeft({
           hours: duration.hours(),
           minutes: duration.minutes(),

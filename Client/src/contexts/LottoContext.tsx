@@ -1,7 +1,7 @@
 import { useEthersStore } from "@/store/ethersStore";
 import LottoAbi from "../../contracts/Lottery.json";
 import { ethers } from "ethers";
-import { createContext, useContext, useEffect, useState } from "react";
+import { createContext, useContext, useEffect, useRef, useState } from "react";
 import { rightChainId } from "@/constants";
 import { useEthers } from "@/hooks/useEthers";
 
@@ -21,6 +21,7 @@ const LottoProvider = ({ children }: { children: any }) => {
   const { provider, signer } = useEthers();
   const lottoContractAddress = "0x8C673f4b0C0a934d388eb9ADcD7bCEb7CC41Db8a";
   const [lottoContract, setLottoContract] = useState<any>(null);
+  const refresherRef = useRef<any>(null);
 
   useEffect(() => {
     if (!provider || !currentWallet || !signer || chainId != rightChainId)
@@ -36,7 +37,16 @@ const LottoProvider = ({ children }: { children: any }) => {
   useEffect(() => {
     if (!currentWallet || !lottoContract || chainId != rightChainId) return;
     refresh();
+    refresherRef.current = refreshInterval();
+    return () => {
+      clearInterval(refresherRef.current);
+    };
   }, [currentWallet, lottoContract, chainId]);
+
+  const refreshInterval = () =>
+    setInterval(() => {
+      refresh();
+    }, 10000);
 
   const getLastLottery = async () => {
     if (!provider || !lottoContract || chainId != rightChainId) return;
@@ -53,9 +63,6 @@ const LottoProvider = ({ children }: { children: any }) => {
 
   const getUserStatus = async () => {
     if (!provider || !lottoContract || chainId != rightChainId) return;
-    const lastLottery = await getLastLottery();
-    useEthersStore.setState({ currentLottoInfo: lastLottery });
-
     const currentLottoId = await lottoContract.lotteryId();
     const userStatusInLastLottery = await lottoContract.getUserStatus(
       currentLottoId,
@@ -122,10 +129,16 @@ const LottoProvider = ({ children }: { children: any }) => {
     }
   };
 
+  const updateLastLotteryInfo = async () => {
+    if (!provider || !lottoContract || chainId != rightChainId) return;
+    const lastLottery = await getLastLottery();
+    useEthersStore.setState({ currentLottoInfo: lastLottery });
+  };
+
   const refresh = async () => {
     if (!provider || !lottoContract || chainId != rightChainId) return;
     try {
-      console.log("refresh");
+      updateLastLotteryInfo();
       getUserStatus();
       getLastRounds();
     } catch (error) {
