@@ -33,6 +33,7 @@ export const Input = styled.input`
   border: none;
   border-radius: 5px;
   box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.1);
+  background: rgba(83, 83, 83, 0.29);
 `;
 
 export const Button = styled.button`
@@ -44,4 +45,17 @@ export const Button = styled.button`
   color: #FFF;
   font-weight: bold;
   cursor: pointer;
+`;
+
+export const p = styled.p`
+  width: 545px;
+  height: 10px;
+  left: 181px;
+  top: 436px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 48px;
+  display: flex;
+  align-items: center;
+  color: #EEEEEE;
 `;
