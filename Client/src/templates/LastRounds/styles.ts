@@ -16,5 +16,14 @@ export const RoundsContainer = styled.div`
   display: flex;
   flex-wrap: wrap;
   align-items: center;
+  justify-content: center;
   gap: 20px;
+`;
+
+export const RoundContainer = styled.div``;
+
+export const RoundManageArea = styled.div`
+  display: flex;
+  justify-content: center;
+  padding-top: 2px;
 `;

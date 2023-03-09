@@ -7,7 +7,6 @@ export const Container = styled.div`
   max-height: 450px;
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
   align-items: center;
 
   @media (max-width: 800px) {
@@ -35,3 +34,14 @@ export const Bullet = styled.div<BulletProps>`
   opacity: ${({ active }) => (active ? 1 : 0.5)};
   cursor: pointer;
 `;
+
+export const TimeLeft = styled.div`
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  flex-direction: column;
+`;
+
+export const TimeLeftText = styled.div``;

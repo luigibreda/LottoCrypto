@@ -3,6 +3,7 @@ import Image from "next/image";
 import * as S from "./styles";
 
 import ActionButtons from "./ActionButtons";
+import { LinearProgress } from "@mui/material";
 
 const Resume = () => {
   return (
@@ -36,7 +37,6 @@ const Resume = () => {
           start dreaming of the big cryptocurrency prize!
         </P>
       </S.TextResume>
-
       <ActionButtons />
     </S.Container>
   );

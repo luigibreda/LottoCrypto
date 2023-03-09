@@ -9,7 +9,9 @@ interface TicketProps {
   wallet: string;
   finalized: boolean;
   ticketsCount: any;
-  isLastRound?: boolean;
+  isLastsRounds?: boolean;
+  ticketsToSale?: any;
+  claimed?: boolean;
 }
 
 const Ticket = ({
@@ -18,7 +20,9 @@ const Ticket = ({
   wallet,
   finalized,
   ticketsCount,
-  isLastRound = false,
+  claimed,
+  isLastsRounds = false,
+  ticketsToSale = 0,
 }: TicketProps) => {
   return (
     <>
@@ -46,22 +50,30 @@ const Ticket = ({
             />
             <S.Line>
               <S.Label>
-                {!isLastRound ? "Ticket Owner Wallet" : "Winner"}
+                {!isLastsRounds ? "Ticket Owner Wallet" : "Winner"}
               </S.Label>
               <P>{wallet}</P>
             </S.Line>
             <S.Line>
-              <S.Label>Ticket ID</S.Label>
-              <P>{id?.toString() || 0}</P>
+              <S.Label>{!isLastsRounds ? "Ticket ID" : "Round ID"}</S.Label>
+              <P>{id?.toString()}</P>
             </S.Line>
             <S.Line>
               <S.Label>Tickets sold</S.Label>
-              <P>{ticketsCount && ticketsCount.toString()}</P>
+              <P>
+                {ticketsCount.toString()}/{ticketsToSale}
+              </P>
             </S.Line>
             <S.Line>
               <S.Label>Status</S.Label>
               <P>{finalized ? "Finished" : "Not finished"}</P>
             </S.Line>
+            {isLastsRounds && (
+              <S.Line>
+                <S.Label>Claimed</S.Label>
+                <P>{claimed ? "Yes" : "Not"}</P>
+              </S.Line>
+            )}
             <Image
               src={"/logo.png"}
               alt={"LottoCrypto"}

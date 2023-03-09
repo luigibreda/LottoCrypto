@@ -10,10 +10,10 @@ export const Container = styled.div`
 
 export const Content = styled.div`
   position: relative;
-  height: calc(100vh - 100px);
   display: flex;
   width: 100%;
   max-width: 1100px;
+  margin-bottom: 100px;
 
   @media (max-width: 800px) {
     flex-direction: column;
