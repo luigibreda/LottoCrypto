@@ -4,7 +4,8 @@ import Logo from "../Logo";
 import { useEthersStore } from "@/store/ethersStore";
 import Image from "next/image";
 import { Alert } from "@mui/material";
-import { rightChainId } from "@/constants";
+import { adminsWallets, rightChainId } from "@/constants";
+import Link from "next/link";
 
 interface HeaderProps {}
 
@@ -16,6 +17,9 @@ const Header = ({}: HeaderProps) => {
     <S.Container layout>
       {currentWallet && chainId != rightChainId && (
         <Alert severity="error">Please connect to the MUMBAI network!</Alert>
+      )}
+      {currentWallet && adminsWallets.includes(currentWallet) && (
+        <Link href="/admin">Admin Panel</Link>
       )}
 
       <AnimatePresence>
@@ -37,7 +41,9 @@ const Header = ({}: HeaderProps) => {
             repeatType: "reverse",
           }}
         >
-          <Logo />
+          <Link href="/">
+            <Logo />
+          </Link>
         </motion.div>
       </AnimatePresence>
 

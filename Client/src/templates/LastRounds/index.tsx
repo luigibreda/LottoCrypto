@@ -10,11 +10,14 @@ interface LastRoundsProps {}
 const LastRounds = ({}: LastRoundsProps) => {
   const lastRounds = useEthersStore((state) => state.lastRounds);
   const currentWallet = useEthersStore((state) => state.currentWallet);
-  const { claim } = useLotto();
+  const { claim, getMoreRounds } = useLotto();
+
+  console.log(lastRounds);
 
   return (
     <S.Container>
       <H2>Last Rounds</H2>
+      <button onClick={getMoreRounds}>get more rounds</button>
       <S.RoundsContainer>
         {LastRounds.length &&
           lastRounds?.map((round) => (

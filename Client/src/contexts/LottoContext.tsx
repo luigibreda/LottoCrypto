@@ -9,6 +9,7 @@ type LottoContextType = {
   buyTicket: () => Promise<void>;
   claim: (loteryId: number | string) => Promise<void>;
   refresh: () => Promise<void>;
+  getMoreRounds: () => Promise<void>;
 };
 
 const LottoContext = createContext({} as LottoContextType);
@@ -19,9 +20,13 @@ const LottoProvider = ({ children }: { children: any }) => {
   const chainId = useEthersStore((state) => state.chainId);
   const currentWallet = useEthersStore((state) => state.currentWallet);
   const { provider, signer } = useEthers();
-  const lottoContractAddress = "0x8C673f4b0C0a934d388eb9ADcD7bCEb7CC41Db8a";
+  const lottoContractAddress = "0x72a20ce4c4eDa85aa88a34a3292a46689020A11b";
   const [lottoContract, setLottoContract] = useState<any>(null);
   const refresherRef = useRef<any>(null);
+  const [infinteScrollPosition, setInfinteScrollPosition] = useState({
+    start: -1,
+    end: -1,
+  });
 
   useEffect(() => {
     if (!provider || !currentWallet || !signer || chainId != rightChainId)
@@ -36,6 +41,9 @@ const LottoProvider = ({ children }: { children: any }) => {
 
   useEffect(() => {
     if (!currentWallet || !lottoContract || chainId != rightChainId) return;
+    if (!(useEthersStore.getState().lastRounds.length >= 4)) {
+      getLastRounds();
+    }
     refresh();
     refresherRef.current = refreshInterval();
     return () => {
@@ -46,6 +54,7 @@ const LottoProvider = ({ children }: { children: any }) => {
   const refreshInterval = () =>
     setInterval(() => {
       refresh();
+      checkIfLastTicketIdChanged();
     }, 10000);
 
   const getLastLottery = async () => {
@@ -104,7 +113,15 @@ const LottoProvider = ({ children }: { children: any }) => {
       useEthersStore.setState({ loading: true });
       const tx = await lottoContract.claim(loteryId);
       const receipt = await tx.wait();
-      refresh();
+      const lastRounds = useEthersStore.getState().lastRounds;
+      const newLastRounds = lastRounds.map((round) => {
+        if (round.id == loteryId) {
+          return { ...round, claimed: true };
+        }
+        return round;
+      });
+      console.log("newLastRounds", newLastRounds);
+      useEthersStore.setState({ lastRounds: newLastRounds });
     } catch (error) {
       console.log(error);
     } finally {
@@ -120,13 +137,79 @@ const LottoProvider = ({ children }: { children: any }) => {
       for (let i = 1; i < 5; i++) {
         if (currentLottoId - i < 0) break;
         const round = await lottoContract.getLotteryStatus(currentLottoId - i);
-        const userStatus = await lottoContract.getUserStatus(
-          currentLottoId - i,
-          currentWallet
-        );
-        lastRounds.push({ id: currentLottoId - i, userStatus, ...round });
+        lastRounds.push({ id: currentLottoId - i, ...round });
       }
+
+      const lastFetched = lastRounds[lastRounds.length - 1].id;
+
+      setInfinteScrollPosition({
+        start: lastFetched - 1,
+        end: lastFetched - 4,
+      });
+
       useEthersStore.setState({ lastRounds: lastRounds });
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const checkIfLastTicketIdChanged = async () => {
+    if (!provider || !lottoContract || chainId != rightChainId) return;
+    try {
+      const lastTicketId = (await lottoContract.lotteryId()) - 1;
+      const lastTicketInStoreId = useEthersStore.getState().lastRounds[0].id;
+
+      console.log(lastTicketId, lastTicketInStoreId);
+
+      if (lastTicketId != lastTicketInStoreId) {
+        const lastRoundInfo = await lottoContract.getLotteryStatus(
+          lastTicketId
+        );
+        const lastTicketTrated = { id: lastTicketId, ...lastRoundInfo };
+
+        useEthersStore.setState({
+          lastRounds: [
+            lastTicketTrated,
+            ...useEthersStore.getState().lastRounds,
+          ],
+        });
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const getMoreRounds = async () => {
+    if (!provider || !lottoContract || chainId != rightChainId) return;
+    const lastLotteryId = await lottoContract.lotteryId();
+    try {
+      if (infinteScrollPosition.start < 0) return;
+      for (
+        let i = infinteScrollPosition.start;
+        i >= infinteScrollPosition.end;
+        i--
+      ) {
+        if (lastLotteryId == 0) return;
+        if (i < 0) break;
+        const round = await lottoContract.getLotteryStatus(i);
+        useEthersStore.setState({
+          lastRounds: [
+            ...useEthersStore.getState().lastRounds,
+            { id: i, ...round },
+          ],
+        });
+      }
+      if (infinteScrollPosition.end > 0) {
+        setInfinteScrollPosition({
+          start: infinteScrollPosition.end - 1,
+          end: infinteScrollPosition.end - 4,
+        });
+        return;
+      }
+      setInfinteScrollPosition({
+        start: -1,
+        end: -1,
+      });
     } catch (error) {
       console.log(error);
     }
@@ -141,9 +224,9 @@ const LottoProvider = ({ children }: { children: any }) => {
   const refresh = async () => {
     if (!provider || !lottoContract || chainId != rightChainId) return;
     try {
+      console.log("refreshing");
       updateLastLotteryInfo();
       getUserStatus();
-      getLastRounds();
     } catch (error) {
       console.log(error);
     }
@@ -155,6 +238,7 @@ const LottoProvider = ({ children }: { children: any }) => {
         buyTicket,
         claim,
         refresh,
+        getMoreRounds,
       }}
     >
       {children}
