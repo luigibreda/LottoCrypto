@@ -24,7 +24,7 @@ const Admin = ({}: AdminProps) => {
         <S.Input type="text" placeholder="10" />
         <S.p>Time to expire claim (minutes)</S.p>
         <S.Input type="text" placeholder="600500" />
-        <Button type="submit">Salvar</Button>
+        <Button>Salvar</Button>
       </S.Form>
     </S.Container>
   );
