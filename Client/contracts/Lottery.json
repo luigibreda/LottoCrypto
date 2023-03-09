@@ -32264,17 +32264,39 @@
   "ast": {
     "absolutePath": "project:/contracts/Lottery.sol",
     "exportedSymbols": {
-      "AutomationBase": [29],
-      "AutomationCompatible": [38],
-      "AutomationCompatibleInterface": [115],
-      "Context": [400],
-      "Counters": [474],
-      "Lottery": [1468],
-      "Ownable": [324],
-      "ReentrancyGuard": [378],
-      "VRFConsumerBaseV2": [96],
-      "VRFCoordinatorV2Interface": [211],
-      "VRFV2Consumer": [1710]
+      "AutomationBase": [
+        29
+      ],
+      "AutomationCompatible": [
+        38
+      ],
+      "AutomationCompatibleInterface": [
+        115
+      ],
+      "Context": [
+        400
+      ],
+      "Counters": [
+        474
+      ],
+      "Lottery": [
+        1468
+      ],
+      "Ownable": [
+        324
+      ],
+      "ReentrancyGuard": [
+        378
+      ],
+      "VRFConsumerBaseV2": [
+        96
+      ],
+      "VRFCoordinatorV2Interface": [
+        211
+      ],
+      "VRFV2Consumer": [
+        1710
+      ]
     },
     "id": 1469,
     "license": "MIT",
@@ -32377,7 +32399,9 @@
             "baseName": {
               "id": 484,
               "name": "Ownable",
-              "nameLocations": ["492:7:9"],
+              "nameLocations": [
+                "492:7:9"
+              ],
               "nodeType": "IdentifierPath",
               "referencedDeclaration": 324,
               "src": "492:7:9"
@@ -32390,7 +32414,9 @@
             "baseName": {
               "id": 486,
               "name": "ReentrancyGuard",
-              "nameLocations": ["505:15:9"],
+              "nameLocations": [
+                "505:15:9"
+              ],
               "nodeType": "IdentifierPath",
               "referencedDeclaration": 378,
               "src": "505:15:9"
@@ -32403,7 +32429,9 @@
             "baseName": {
               "id": 488,
               "name": "VRFV2Consumer",
-              "nameLocations": ["526:13:9"],
+              "nameLocations": [
+                "526:13:9"
+              ],
               "nodeType": "IdentifierPath",
               "referencedDeclaration": 1710,
               "src": "526:13:9"
@@ -32416,7 +32444,9 @@
             "baseName": {
               "id": 490,
               "name": "AutomationCompatibleInterface",
-              "nameLocations": ["545:29:9"],
+              "nameLocations": [
+                "545:29:9"
+              ],
               "nodeType": "IdentifierPath",
               "referencedDeclaration": 115,
               "src": "545:29:9"
@@ -32431,7 +32461,15 @@
         "contractKind": "contract",
         "fullyImplemented": true,
         "id": 1468,
-        "linearizedBaseContracts": [1468, 115, 1710, 378, 324, 400, 96],
+        "linearizedBaseContracts": [
+          1468,
+          115,
+          1710,
+          378,
+          324,
+          400,
+          96
+        ],
         "name": "Lottery",
         "nameLocation": "477:7:9",
         "nodeType": "ContractDefinition",
@@ -32442,7 +32480,9 @@
             "libraryName": {
               "id": 492,
               "name": "Counters",
-              "nameLocations": ["587:8:9"],
+              "nameLocations": [
+                "587:8:9"
+              ],
               "nodeType": "IdentifierPath",
               "referencedDeclaration": 474,
               "src": "587:8:9"
@@ -32455,7 +32495,10 @@
               "pathNode": {
                 "id": 493,
                 "name": "Counters.Counter",
-                "nameLocations": ["600:8:9", "609:7:9"],
+                "nameLocations": [
+                  "600:8:9",
+                  "609:7:9"
+                ],
                 "nodeType": "IdentifierPath",
                 "referencedDeclaration": 406,
                 "src": "600:16:9"
@@ -32649,7 +32692,10 @@
                   "pathNode": {
                     "id": 508,
                     "name": "Counters.Counter",
-                    "nameLocations": ["802:8:9", "811:7:9"],
+                    "nameLocations": [
+                      "802:8:9",
+                      "811:7:9"
+                    ],
                     "nodeType": "IdentifierPath",
                     "referencedDeclaration": 406,
                     "src": "802:16:9"
@@ -32999,7 +33045,9 @@
                   "pathNode": {
                     "id": 534,
                     "name": "User",
-                    "nameLocations": ["1151:4:9"],
+                    "nameLocations": [
+                      "1151:4:9"
+                    ],
                     "nodeType": "IdentifierPath",
                     "referencedDeclaration": 503,
                     "src": "1151:4:9"
@@ -33120,7 +33168,9 @@
                 "pathNode": {
                   "id": 546,
                   "name": "LotteryStruct",
-                  "nameLocations": ["1256:13:9"],
+                  "nameLocations": [
+                    "1256:13:9"
+                  ],
                   "nodeType": "IdentifierPath",
                   "referencedDeclaration": 531,
                   "src": "1256:13:9"
@@ -33157,7 +33207,10 @@
               "pathNode": {
                 "id": 550,
                 "name": "Counters.Counter",
-                "nameLocations": ["1285:8:9", "1294:7:9"],
+                "nameLocations": [
+                  "1285:8:9",
+                  "1294:7:9"
+                ],
                 "nodeType": "IdentifierPath",
                 "referencedDeclaration": 406,
                 "src": "1285:16:9"
@@ -34148,7 +34201,9 @@
               "src": "2695:480:9",
               "statements": [
                 {
-                  "assignments": [649],
+                  "assignments": [
+                    649
+                  ],
                   "declarations": [
                     {
                       "constant": false,
@@ -34898,7 +34953,9 @@
                 "modifierName": {
                   "id": 642,
                   "name": "VRFV2Consumer",
-                  "nameLocations": ["2634:13:9"],
+                  "nameLocations": [
+                    "2634:13:9"
+                  ],
                   "nodeType": "IdentifierPath",
                   "referencedDeclaration": 1710,
                   "src": "2634:13:9"
@@ -35126,7 +35183,9 @@
               "src": "3232:1651:9",
               "statements": [
                 {
-                  "assignments": [714],
+                  "assignments": [
+                    714
+                  ],
                   "declarations": [
                     {
                       "constant": false,
@@ -35498,7 +35557,9 @@
                   "src": "3440:136:9"
                 },
                 {
-                  "assignments": [740],
+                  "assignments": [
+                    740
+                  ],
                   "declarations": [
                     {
                       "constant": false,
@@ -36327,7 +36388,9 @@
                   "src": "4074:44:9"
                 },
                 {
-                  "assignments": [804],
+                  "assignments": [
+                    804
+                  ],
                   "declarations": [
                     {
                       "constant": false,
@@ -37201,7 +37264,9 @@
                 "modifierName": {
                   "id": 710,
                   "name": "nonReentrant",
-                  "nameLocations": ["3219:12:9"],
+                  "nameLocations": [
+                    "3219:12:9"
+                  ],
                   "nodeType": "IdentifierPath",
                   "referencedDeclaration": 354,
                   "src": "3219:12:9"
@@ -37238,7 +37303,9 @@
               "src": "4924:734:9",
               "statements": [
                 {
-                  "assignments": [872],
+                  "assignments": [
+                    872
+                  ],
                   "declarations": [
                     {
                       "constant": false,
@@ -37320,7 +37387,9 @@
                   "src": "4934:44:9"
                 },
                 {
-                  "assignments": [878],
+                  "assignments": [
+                    878
+                  ],
                   "declarations": [
                     {
                       "constant": false,
@@ -38176,7 +38245,9 @@
             "visibility": "private"
           },
           {
-            "baseFunctions": [1641],
+            "baseFunctions": [
+              1641
+            ],
             "body": {
               "id": 1007,
               "nodeType": "Block",
@@ -38269,7 +38340,9 @@
                   "src": "5793:50:9"
                 },
                 {
-                  "assignments": [954],
+                  "assignments": [
+                    954
+                  ],
                   "declarations": [
                     {
                       "constant": false,
@@ -38351,7 +38424,9 @@
                   "src": "5853:44:9"
                 },
                 {
-                  "assignments": [960],
+                  "assignments": [
+                    960
+                  ],
                   "declarations": [
                     {
                       "constant": false,
@@ -40355,7 +40430,9 @@
                   "src": "7397:53:9"
                 },
                 {
-                  "assignments": [1107],
+                  "assignments": [
+                    1107
+                  ],
                   "declarations": [
                     {
                       "constant": false,
@@ -40480,7 +40557,9 @@
                   "src": "7461:60:9"
                 },
                 {
-                  "assignments": [1116],
+                  "assignments": [
+                    1116
+                  ],
                   "declarations": [
                     {
                       "constant": false,
@@ -40991,7 +41070,9 @@
                 "modifierName": {
                   "id": 1012,
                   "name": "nonReentrant",
-                  "nameLocations": ["6477:12:9"],
+                  "nameLocations": [
+                    "6477:12:9"
+                  ],
                   "nodeType": "IdentifierPath",
                   "referencedDeclaration": 354,
                   "src": "6477:12:9"
@@ -42129,7 +42210,9 @@
                 "modifierName": {
                   "id": 1155,
                   "name": "onlyOwner",
-                  "nameLocations": ["7827:9:9"],
+                  "nameLocations": [
+                    "7827:9:9"
+                  ],
                   "nodeType": "IdentifierPath",
                   "referencedDeclaration": 243,
                   "src": "7827:9:9"
@@ -42246,7 +42329,9 @@
                   "src": "8678:21:9"
                 },
                 {
-                  "assignments": [1244],
+                  "assignments": [
+                    1244
+                  ],
                   "declarations": [
                     {
                       "constant": false,
@@ -43449,7 +43534,9 @@
                 "modifierName": {
                   "id": 1310,
                   "name": "onlyOwner",
-                  "nameLocations": ["9335:9:9"],
+                  "nameLocations": [
+                    "9335:9:9"
+                  ],
                   "nodeType": "IdentifierPath",
                   "referencedDeclaration": 243,
                   "src": "9335:9:9"
@@ -43760,7 +43847,9 @@
                     "pathNode": {
                       "id": 1356,
                       "name": "LotteryStruct",
-                      "nameLocations": ["9899:13:9"],
+                      "nameLocations": [
+                        "9899:13:9"
+                      ],
                       "nodeType": "IdentifierPath",
                       "referencedDeclaration": 531,
                       "src": "9899:13:9"
@@ -43954,7 +44043,9 @@
                     "pathNode": {
                       "id": 1371,
                       "name": "User",
-                      "nameLocations": ["10080:4:9"],
+                      "nameLocations": [
+                        "10080:4:9"
+                      ],
                       "nodeType": "IdentifierPath",
                       "referencedDeclaration": 503,
                       "src": "10080:4:9"
@@ -44186,7 +44277,9 @@
                 "modifierName": {
                   "id": 1384,
                   "name": "onlyOwner",
-                  "nameLocations": ["10250:9:9"],
+                  "nameLocations": [
+                    "10250:9:9"
+                  ],
                   "nodeType": "IdentifierPath",
                   "referencedDeclaration": 243,
                   "src": "10250:9:9"
@@ -44224,7 +44317,9 @@
               "src": "10520:195:9",
               "statements": [
                 {
-                  "assignments": [1412],
+                  "assignments": [
+                    1412
+                  ],
                   "declarations": [
                     {
                       "constant": false,
@@ -44646,7 +44741,9 @@
               "src": "10796:271:9",
               "statements": [
                 {
-                  "assignments": [1441],
+                  "assignments": [
+                    1441
+                  ],
                   "declarations": [
                     {
                       "constant": false,
@@ -45075,7 +45172,9 @@
         ],
         "scope": 1469,
         "src": "468:10601:9",
-        "usedErrors": [47]
+        "usedErrors": [
+          47
+        ]
       }
     ],
     "src": "32:11038:9"

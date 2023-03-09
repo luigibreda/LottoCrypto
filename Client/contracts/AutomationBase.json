@@ -16,7 +16,7 @@
   "sourceMap": "57:515:0:-:0;;;;;;;;;;;;;;;;;;;",
   "deployedSourceMap": "57:515:0:-:0;;;;;",
   "source": "// SPDX-License-Identifier: MIT\npragma solidity ^0.8.0;\n\ncontract AutomationBase {\n  error OnlySimulatedBackend();\n\n  /**\n   * @notice method that allows it to be simulated via eth_call by checking that\n   * the sender is the zero address.\n   */\n  function preventExecution() internal view {\n    if (tx.origin != address(0)) {\n      revert OnlySimulatedBackend();\n    }\n  }\n\n  /**\n   * @notice modifier that allows it to be simulated via eth_call by checking\n   * that the sender is the zero address.\n   */\n  modifier cannotExecute() {\n    preventExecution();\n    _;\n  }\n}\n",
-  "sourcePath": "@chainlink\\contracts\\src\\v0.8\\AutomationBase.sol",
+  "sourcePath": "@chainlink/contracts/src/v0.8/AutomationBase.sol",
   "ast": {
     "absolutePath": "@chainlink/contracts/src/v0.8/AutomationBase.sol",
     "exportedSymbols": {
@@ -345,8 +345,8 @@
     "version": "0.8.17+commit.8df45f5f.Emscripten.clang"
   },
   "networks": {},
-  "schemaVersion": "3.4.10",
-  "updatedAt": "2023-03-08T18:23:20.851Z",
+  "schemaVersion": "3.4.12",
+  "updatedAt": "2023-03-08T20:24:41.609Z",
   "devdoc": {
     "kind": "dev",
     "methods": {},
