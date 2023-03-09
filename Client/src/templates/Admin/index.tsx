@@ -18,10 +18,12 @@ const Admin = ({}: AdminProps) => {
         <S.Input type="text" placeholder="10" />
         <S.p>Min. Ticket</S.p>
         <S.Input type="text" placeholder="1" />
-        <S.p>Config Finish Time ( minutes )</S.p>
+        <S.p>Config Finish Time (minutes)</S.p>
         <S.Input type="text" placeholder="10" />
         <S.p>Fee ($)</S.p>
         <S.Input type="text" placeholder="10" />
+        <S.p>Time to expire claim (minutes)</S.p>
+        <S.Input type="text" placeholder="600500" />
         <Button type="submit">Salvar</Button>
       </S.Form>
     </S.Container>
