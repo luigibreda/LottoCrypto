@@ -171,7 +171,7 @@ contract Lottery is
             .current();
 
         require(
-            lottery[currentLottery].minTicket < currentLotteryPosition,
+            lottery[currentLottery].minTicket <= currentLotteryPosition,
             "It Didnt reach min tickets yet."
         );
 
