@@ -35,4 +35,5 @@ export const Container = styled.button<ButtonProps>`
 export const Text = styled.span`
   font-size: 1.2em;
   font-weight: bold;
+  color: #222;
 `;
