@@ -10,11 +10,18 @@ const Admin = ({}: AdminProps) => {
       <Header />
       <h1>Admin Panel</h1>
       <S.Form>
-        <S.Input type="text" placeholder="Nome" />
-        <S.Input type="text" placeholder="E-mail" />
-        <S.Input type="text" placeholder="Telefone" />
-        <S.Input type="text" placeholder="Endereço" />
-        <S.Input type="text" placeholder="Senha" />
+        <S.p>Lottery Name:</S.p>
+        <S.Input type="text" placeholder="Lottery Name" />
+        <S.p>Ticket Price ($):</S.p>
+        <S.Input type="text" placeholder="10" />
+        <S.p>Min. Ticket:</S.p>
+        <S.Input type="text" placeholder="1" />
+        <S.p>Config Finish Time (minutes):</S.p>
+        <S.Input type="text" placeholder="600" />
+        <S.p>Fee ($):</S.p>
+        <S.Input type="text" placeholder="1" />
+        <S.p>Claim Expirate at (minutes):</S.p>
+        <S.Input type="text" placeholder="60000" />
         <Button color="black">Salvar</Button>
       </S.Form>
     </S.Container>
