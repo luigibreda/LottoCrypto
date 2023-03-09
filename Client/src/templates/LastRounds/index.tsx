@@ -18,11 +18,10 @@ const LastRounds = ({}: LastRoundsProps) => {
       <S.RoundsContainer>
         {LastRounds.length &&
           lastRounds?.map((round) => (
-            <S.RoundContainer>
+            <S.RoundContainer key={round.id}>
               <Ticket
                 isLastsRounds={true}
                 ticketsToSale={round.minTicket || 0}
-                key={round.id}
                 id={round.id}
                 finalized={round.finalized}
                 ticketsCount={round.ticketsCount}
