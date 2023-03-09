@@ -28,6 +28,9 @@ const LastRounds = ({}: LastRoundsProps) => {
                 wallet={round.winner}
                 claimed={round.claimed}
                 current={true}
+                isWinner={
+                  round.winner.toLowerCase() == currentWallet?.toLowerCase()
+                }
               />
               {!round.claimed &&
                 round.winner.toLowerCase() == currentWallet?.toLowerCase() && (

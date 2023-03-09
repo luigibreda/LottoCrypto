@@ -116,12 +116,15 @@ const LottoProvider = ({ children }: { children: any }) => {
     if (!provider || !lottoContract || chainId != rightChainId) return;
     try {
       const currentLottoId = await lottoContract.lotteryId();
-
       const lastRounds = [];
       for (let i = 1; i < 5; i++) {
         if (currentLottoId - i < 0) break;
         const round = await lottoContract.getLotteryStatus(currentLottoId - i);
-        lastRounds.push({ id: currentLottoId - i, ...round });
+        const userStatus = await lottoContract.getUserStatus(
+          currentLottoId - i,
+          currentWallet
+        );
+        lastRounds.push({ id: currentLottoId - i, userStatus, ...round });
       }
       useEthersStore.setState({ lastRounds: lastRounds });
     } catch (error) {

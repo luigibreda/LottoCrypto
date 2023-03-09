@@ -1,6 +1,7 @@
 import { P } from "../Heading";
 import * as S from "./styles";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion } from "framer-motion";
+import EmojiEventsIcon from "@mui/icons-material/EmojiEvents";
 import Image from "next/image";
 
 interface TicketProps {
@@ -12,6 +13,7 @@ interface TicketProps {
   isLastsRounds?: boolean;
   ticketsToSale?: any;
   claimed?: boolean;
+  isWinner?: boolean;
 }
 
 const Ticket = ({
@@ -19,10 +21,11 @@ const Ticket = ({
   id,
   wallet,
   finalized,
-  ticketsCount,
+  ticketsCount = 0,
   claimed,
   isLastsRounds = false,
   ticketsToSale = 0,
+  isWinner = false,
 }: TicketProps) => {
   return (
     <>
@@ -41,7 +44,16 @@ const Ticket = ({
             damping: 40,
           }}
         >
-          <S.Container>
+          <S.Container isWinner={isWinner}>
+            {isWinner && (
+              <S.WinnerIcon>
+                <EmojiEventsIcon
+                  sx={{
+                    color: "#505050",
+                  }}
+                />
+              </S.WinnerIcon>
+            )}
             <Image
               src={"/LottoCrypto.png"}
               alt={"LottoCrypto"}

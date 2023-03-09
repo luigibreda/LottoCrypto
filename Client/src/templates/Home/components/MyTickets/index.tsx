@@ -34,9 +34,9 @@ const MyTickets = () => {
             <Ticket
               key={index}
               id={ticket}
-              ticketsToSale={currentLottoInfo.minTicket || 0}
-              finalized={currentLottoInfo.finalized}
-              ticketsCount={currentLottoInfo.ticketsCount}
+              ticketsToSale={currentLottoInfo?.minTicket}
+              finalized={currentLottoInfo?.finalized}
+              ticketsCount={currentLottoInfo?.ticketsCount}
               wallet={currentWallet}
               current={currentTicket === index}
             />
