@@ -17,19 +17,18 @@ export const useCounter = () => {
     if (!currentLottoInfo) return;
     if (!currentWallet) return clearInterval(counterRef.current);
     if (currentLottoInfo?.finishTrigger) {
+      if (counterRef.current) clearInterval(counterRef.current);
       const start = currentLottoInfo.startedTime.toNumber();
       const end = currentLottoInfo.timeToFinish.toNumber();
 
-      if (counterRef.current) clearInterval(counterRef.current);
-
       counterRef.current = setInterval(() => {
-        if (progress >= 100) clearInterval(counterRef.current);
         const now = Math.floor(Date.now() / 1000);
         const timeLeftInSeconds = end - now;
         const percPercorrido = ((now - start) / (end - start)) * 100;
 
         const duration = moment.duration(timeLeftInSeconds, "seconds");
-
+        if (timeLeftInSeconds <= 0) return clearInterval(counterRef.current);
+        if (percPercorrido >= 100) clearInterval(counterRef.current);
         setTimeLeft({
           hours: duration.hours(),
           minutes: duration.minutes(),
@@ -37,7 +36,6 @@ export const useCounter = () => {
         });
 
         setProgress(percPercorrido.toFixed(2));
-        if (timeLeftInSeconds <= 0) return clearInterval(counterRef.current);
       }, 1000);
     }
   }, [currentLottoInfo, currentWallet]);

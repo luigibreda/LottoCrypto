@@ -1,11 +1,10 @@
 import Button from "@/components/Button";
 import { rightChainId } from "@/constants";
-import { useLotto } from "@/hooks/useLotto";
 import { useEthersStore } from "@/store/ethersStore";
 import { Alert, Collapse, IconButton, LinearProgress } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
-import { useEffect, useState } from "react";
 import * as S from "./styles";
+import { useLotto } from "@/contexts/LottoContext";
 
 interface ActionButtonsProps {}
 

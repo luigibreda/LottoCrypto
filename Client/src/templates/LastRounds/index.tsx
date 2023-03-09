@@ -3,7 +3,7 @@ import { useEthersStore } from "@/store/ethersStore";
 import Ticket from "@/components/Ticket";
 import * as S from "./styles";
 import Button from "@/components/Button";
-import { useLotto } from "@/hooks/useLotto";
+import { useLotto } from "@/contexts/LottoContext";
 
 interface LastRoundsProps {}
 

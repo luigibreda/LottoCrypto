@@ -1,5 +1,5 @@
+import Header from "@/components/Header";
 import React from "react";
-//import styled from "styled-components";
 import * as S from "./styles";
 
 interface AdminProps {}
@@ -7,6 +7,7 @@ interface AdminProps {}
 const Admin = ({}: AdminProps) => {
   return (
     <S.Container>
+      <Header />
       <h1>Admin Panel</h1>
       <S.Form>
         <S.Input type="text" placeholder="Nome" />
