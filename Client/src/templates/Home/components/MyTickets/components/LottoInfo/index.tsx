@@ -13,7 +13,15 @@ interface LottoInfoProps {
 
 const LottoInfo = ({ info, isLogged }: LottoInfoProps) => {
   return (
-    <S.Container isLogged={isLogged}>
+    <S.Container
+      initial={{ x: 50, rotateY: 90, opacity: 0 }}
+      animate={{ x: 0, rotateY: 0, opacity: 1 }}
+      transition={{
+        type: "spring",
+        stiffness: 90,
+        damping: 40,
+      }}
+    >
       <S.Line>
         <S.Info>
           <P bold>Round ID</P>

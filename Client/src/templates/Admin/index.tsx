@@ -1,5 +1,4 @@
 import Button from "@/components/Button";
-import Header from "@/components/Header";
 import * as S from "./styles";
 
 interface AdminProps {}
@@ -7,7 +6,6 @@ interface AdminProps {}
 const Admin = ({}: AdminProps) => {
   return (
     <S.Container>
-      <Header />
       <h1>Admin Panel</h1>
       <S.Form>
         <S.p>Lottery Name:</S.p>

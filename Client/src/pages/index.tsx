@@ -2,6 +2,7 @@ import Head from "next/head";
 
 import { Poppins } from "next/font/google";
 import Home from "@/templates/Home";
+import AppLayout from "@/layouts/AppLayout";
 
 const poppins = Poppins({
   weight: "500",
@@ -18,7 +19,9 @@ export default function HomePage() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <main className={poppins.className}>
-        <Home />
+        <AppLayout>
+          <Home />
+        </AppLayout>
       </main>
     </>
   );

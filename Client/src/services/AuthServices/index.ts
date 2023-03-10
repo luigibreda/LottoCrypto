@@ -1,14 +1,29 @@
+import { useEthersStore } from "@/store/ethersStore";
 import ethers from "ethers";
 
 export const AuthServices = {
   connect: async (provider: ethers.providers.Web3Provider) => {
-    try {
+    const network = await provider.getNetwork();
+
+    if (network.chainId === 80001) {
       const [wallet] = await provider.send("eth_requestAccounts", []);
       return wallet;
-    } catch (error) {
-      console.log(error);
-      return null;
     }
+
+    try {
+      await provider.send("wallet_switchEthereumChain", [
+        { chainId: `0x${(80001).toString(16)}` },
+      ]);
+      useEthersStore.setState({ chainId: 80001 });
+    } catch (switchError: any) {
+      if (switchError.code === 4902) {
+        return null;
+      }
+      throw switchError;
+    }
+
+    const [wallet] = await provider.send("eth_requestAccounts", []);
+    return wallet;
   },
   getConnectedWallet: async (provider: ethers.providers.Web3Provider) => {
     try {

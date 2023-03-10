@@ -29,8 +29,7 @@ const LottoProvider = ({ children }: { children: any }) => {
   );
 
   useEffect(() => {
-    if (!provider || !currentWallet || !signer || chainId != rightChainId)
-      return;
+    if (!provider || !currentWallet || !signer) return;
     const lottoContract = new ethers.Contract(
       lottoContractAddress,
       LottoAbi.abi,
@@ -41,7 +40,13 @@ const LottoProvider = ({ children }: { children: any }) => {
   }, [chainId, provider, signer]);
 
   useEffect(() => {
-    if (!currentWallet || !lottoContract || chainId != rightChainId) return;
+    if (
+      !currentWallet ||
+      !lottoContract ||
+      chainId != rightChainId ||
+      !provider
+    )
+      return;
     if (useEthersStore.getState().lastRounds.length < step) {
       getLastRounds();
     }
@@ -50,7 +55,7 @@ const LottoProvider = ({ children }: { children: any }) => {
     return () => {
       clearInterval(refresherRef.current);
     };
-  }, [currentWallet, lottoContract, chainId]);
+  }, [currentWallet, lottoContract, chainId, provider]);
 
   const refreshInterval = () =>
     setInterval(() => {

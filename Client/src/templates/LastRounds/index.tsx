@@ -17,7 +17,7 @@ const LastRounds = () => {
   );
   const { claim } = useLotto();
   const { getMoreRounds, hasMoreRounds } = useInfiniteLotto();
-  const thresouldInPx = 150;
+  const thresouldInPx = 200;
 
   useEffect(() => {
     const handleScroll = () => {
@@ -37,7 +37,7 @@ const LastRounds = () => {
     <S.Container>
       <H2>Last Rounds</H2>
       <S.RoundsContainer>
-        {lastRounds.length &&
+        {lastRounds.length > 1 &&
           lastRounds?.map((round) => (
             <S.RoundContainer key={round.id}>
               <Ticket

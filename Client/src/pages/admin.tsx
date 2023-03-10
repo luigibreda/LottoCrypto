@@ -4,6 +4,7 @@ import { Poppins } from "next/font/google";
 import Admin from "../templates/Admin";
 import React from "react";
 import { PrivateRoute } from "@/templates/PrivateRoute";
+import AppLayout from "@/layouts/AppLayout";
 
 const poppins = Poppins({
   weight: "500",
@@ -20,9 +21,11 @@ export default function HomePage() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <main className={poppins.className}>
-        <PrivateRoute>
-          <Admin />
-        </PrivateRoute>
+        <AppLayout>
+          <PrivateRoute>
+            <Admin />
+          </PrivateRoute>
+        </AppLayout>
       </main>
     </>
   );

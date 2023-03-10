@@ -28,6 +28,8 @@ export const useInfiniteLotto = () => {
         if (lastLotteryId == 0) return;
         if (i < 0) break;
         const round = await lottoContract.getLotteryStatus(i);
+        if (useEthersStore.getState().lastRounds.find((r) => r.id == i))
+          continue;
         useEthersStore.setState({
           lastRounds: [
             ...useEthersStore.getState().lastRounds,
@@ -35,18 +37,7 @@ export const useInfiniteLotto = () => {
           ],
         });
       }
-
-      if (end > 0) {
-        useInfiniteScrollStore.setState({
-          start: end - 1,
-          end: end - step,
-        });
-        return;
-      }
-      useInfiniteScrollStore.setState({
-        start: -1,
-        end: -1,
-      });
+      updateStartEnd(end, step);
     } catch (error) {
       console.log(error);
     } finally {
@@ -54,6 +45,20 @@ export const useInfiniteLotto = () => {
         isLoadingMoreRounds: false,
       });
     }
+  };
+
+  const updateStartEnd = (end: number, step: number) => {
+    if (end > 0) {
+      useInfiniteScrollStore.setState({
+        start: end - 1,
+        end: end - step,
+      });
+      return;
+    }
+    useInfiniteScrollStore.setState({
+      start: -1,
+      end: -1,
+    });
   };
 
   return { getMoreRounds, hasMoreRounds };

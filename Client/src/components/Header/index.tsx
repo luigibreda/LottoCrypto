@@ -19,7 +19,7 @@ const Header = ({}: HeaderProps) => {
         <Alert severity="error">Please connect to the MUMBAI network!</Alert>
       )}
       {currentWallet && adminsWallets.includes(currentWallet) && (
-        <Link href="/admin">Admin Panel</Link>
+        <S.LinkStyled href="/admin">Admin Panel</S.LinkStyled>
       )}
 
       <AnimatePresence>

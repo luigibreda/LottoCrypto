@@ -1,4 +1,5 @@
 import { motion } from "framer-motion";
+import Link from "next/link";
 import styled from "styled-components";
 
 export const Container = styled(motion.div)`
@@ -18,4 +19,18 @@ export const Wallet = styled(motion.div)`
   display: flex;
   align-items: center;
   gap: 5px;
+`;
+
+export const LinkStyled = styled(Link)`
+  text-decoration: none;
+  color: #a7a7a7;
+  font-size: 0.9em;
+  font-weight: 500;
+  border: 1px solid #303030;
+  padding: 3px;
+  border-radius: 4px;
+
+  &:hover {
+    color: #fff;
+  }
 `;

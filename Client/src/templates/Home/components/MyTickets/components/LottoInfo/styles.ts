@@ -1,10 +1,7 @@
+import { motion } from "framer-motion";
 import styled from "styled-components";
 
-type ContainerProps = {
-  isLogged: boolean;
-};
-
-export const Container = styled.div<ContainerProps>`
+export const Container = styled(motion.div)`
   width: 380px;
   position: relative;
   background: #101010;
@@ -14,8 +11,6 @@ export const Container = styled.div<ContainerProps>`
   display: flex;
   justify-content: space-between;
   gap: 5px;
-  transition: 0.4s;
-  opacity: ${({ isLogged }) => (isLogged ? 1 : 0.4)};
 `;
 
 export const Line = styled.div``;
