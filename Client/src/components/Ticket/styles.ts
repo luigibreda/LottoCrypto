@@ -5,6 +5,7 @@ type TicketProps = {
 };
 
 export const Container = styled.div<TicketProps>`
+  min-width: 380px;
   position: relative;
   background: #101010;
   border-radius: 5px;

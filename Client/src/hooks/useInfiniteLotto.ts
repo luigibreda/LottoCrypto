@@ -5,16 +5,25 @@ import { useInfiniteScrollStore } from "@/store/infiniteScrollStore";
 export const useInfiniteLotto = () => {
   const chainId = useEthersStore((state) => state.chainId);
   const lottoContract = useEthersStore((state) => state.lottoContract);
+  const step = useInfiniteScrollStore((state) => state.step);
   const start = useInfiniteScrollStore((state) => state.start);
   const end = useInfiniteScrollStore((state) => state.end);
+  const isLoadingMoreRounds = useInfiniteScrollStore(
+    (state) => state.isLoadingMoreRounds
+  );
 
-  const hasMoreRounds = end > 0;
+  const hasMoreRounds = start >= 0;
 
   const getMoreRounds = async () => {
     if (!lottoContract || chainId != rightChainId) return;
-    const lastLotteryId = await lottoContract.lotteryId();
+    if (isLoadingMoreRounds) return;
     try {
+      const lastLotteryId = await lottoContract.lotteryId();
       if (start < 0) return;
+      useInfiniteScrollStore.setState({
+        isLoadingMoreRounds: true,
+      });
+
       for (let i = start; i >= end; i--) {
         if (lastLotteryId == 0) return;
         if (i < 0) break;
@@ -26,10 +35,11 @@ export const useInfiniteLotto = () => {
           ],
         });
       }
+
       if (end > 0) {
         useInfiniteScrollStore.setState({
           start: end - 1,
-          end: end - 4,
+          end: end - step,
         });
         return;
       }
@@ -39,6 +49,10 @@ export const useInfiniteLotto = () => {
       });
     } catch (error) {
       console.log(error);
+    } finally {
+      useInfiniteScrollStore.setState({
+        isLoadingMoreRounds: false,
+      });
     }
   };
 

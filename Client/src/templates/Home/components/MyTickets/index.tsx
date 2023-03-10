@@ -1,4 +1,4 @@
-import { H3 } from "@/components/Heading";
+import { H3, P } from "@/components/Heading";
 import Ticket from "@/components/Ticket";
 import { useState } from "react";
 import * as S from "./styles";
@@ -8,6 +8,7 @@ import NoTicket from "@/components/NoTicket";
 import { Pagination } from "@mui/material";
 import Linear from "@/components/LinearProgress";
 import { useCounter } from "./hooks/useCounter";
+import LottoInfo from "./components/LottoInfo";
 
 const MyTickets = () => {
   const [currentTicket, setCurrentTicket] = useState(0);
@@ -19,7 +20,7 @@ const MyTickets = () => {
   return (
     <>
       <S.Container>
-        <H3>{!tickets.length ? "You no have tickets" : "My tickets"}</H3>
+        <LottoInfo info={currentLottoInfo} isLogged={!!currentWallet} />
         <motion.div
           style={{
             display: "flex",

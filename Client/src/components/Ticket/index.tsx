@@ -70,21 +70,24 @@ const Ticket = ({
               <S.Label>{!isLastsRounds ? "Ticket ID" : "Round ID"}</S.Label>
               <P>{id?.toString()}</P>
             </S.Line>
-            <S.Line>
-              <S.Label>Tickets sold</S.Label>
-              <P>
-                {ticketsCount.toString()}/{ticketsToSale}
-              </P>
-            </S.Line>
+
             <S.Line>
               <S.Label>Status</S.Label>
               <P>{finalized ? "Finished" : "Not finished"}</P>
             </S.Line>
             {isLastsRounds && (
-              <S.Line>
-                <S.Label>Claimed</S.Label>
-                <P>{claimed ? "Yes" : "Not"}</P>
-              </S.Line>
+              <>
+                <S.Line>
+                  <S.Label>Tickets sold</S.Label>
+                  <P>
+                    {ticketsCount.toString()}/{ticketsToSale}
+                  </P>
+                </S.Line>
+                <S.Line>
+                  <S.Label>Claimed</S.Label>
+                  <P>{claimed ? "Yes" : "Not"}</P>
+                </S.Line>
+              </>
             )}
             <Image
               src={"/logo.png"}

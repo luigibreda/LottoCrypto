@@ -5,21 +5,39 @@ import * as S from "./styles";
 import Button from "@/components/Button";
 import { useLotto } from "@/contexts/LottoContext";
 import { useInfiniteLotto } from "@/hooks/useInfiniteLotto";
+import { useEffect } from "react";
+import { useInfiniteScrollStore } from "@/store/infiniteScrollStore";
 
-interface LastRoundsProps {}
-
-const LastRounds = ({}: LastRoundsProps) => {
+const LastRounds = () => {
   const lastRounds = useEthersStore((state) => state.lastRounds);
   const currentWallet = useEthersStore((state) => state.currentWallet);
+  const loading = useEthersStore((state) => state.loading);
+  const isLoadingMoreRounds = useInfiniteScrollStore(
+    (state) => state.isLoadingMoreRounds
+  );
   const { claim } = useLotto();
-  const { getMoreRounds } = useInfiniteLotto();
+  const { getMoreRounds, hasMoreRounds } = useInfiniteLotto();
+  const thresouldInPx = 150;
+
+  useEffect(() => {
+    const handleScroll = () => {
+      if (!hasMoreRounds || isLoadingMoreRounds) return;
+      if (
+        window.innerHeight + window.scrollY >=
+        document.body.offsetHeight - thresouldInPx
+      ) {
+        getMoreRounds();
+      }
+    };
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, [hasMoreRounds, isLoadingMoreRounds]);
 
   return (
     <S.Container>
       <H2>Last Rounds</H2>
-      <button onClick={getMoreRounds}>get more rounds</button>
       <S.RoundsContainer>
-        {LastRounds.length &&
+        {lastRounds.length &&
           lastRounds?.map((round) => (
             <S.RoundContainer key={round.id}>
               <Ticket
@@ -41,6 +59,7 @@ const LastRounds = ({}: LastRoundsProps) => {
                     <Button
                       width="30%"
                       theme="black"
+                      disabled={loading}
                       onClick={() => {
                         claim(round.id);
                       }}

@@ -23,6 +23,10 @@ const LottoProvider = ({ children }: { children: any }) => {
   const lottoContractAddress = "0x72a20ce4c4eDa85aa88a34a3292a46689020A11b";
   const [lottoContract, setLottoContract] = useState<any>(null);
   const refresherRef = useRef<any>(null);
+  const step = useInfiniteScrollStore((state) => state.step);
+  const isLoadingMoreRounds = useInfiniteScrollStore(
+    (state) => state.isLoadingMoreRounds
+  );
 
   useEffect(() => {
     if (!provider || !currentWallet || !signer || chainId != rightChainId)
@@ -38,7 +42,7 @@ const LottoProvider = ({ children }: { children: any }) => {
 
   useEffect(() => {
     if (!currentWallet || !lottoContract || chainId != rightChainId) return;
-    if (!(useEthersStore.getState().lastRounds.length >= 4)) {
+    if (useEthersStore.getState().lastRounds.length < step) {
       getLastRounds();
     }
     refresh();
@@ -61,7 +65,7 @@ const LottoProvider = ({ children }: { children: any }) => {
       const lotteryStatus = await lottoContract.getLotteryStatus(
         currentLottoId
       );
-      return lotteryStatus;
+      return { ...lotteryStatus, id: currentLottoId.toString() };
     } catch (error) {
       console.log(error);
     }
@@ -117,7 +121,6 @@ const LottoProvider = ({ children }: { children: any }) => {
         }
         return round;
       });
-      console.log("newLastRounds", newLastRounds);
       useEthersStore.setState({ lastRounds: newLastRounds });
     } catch (error) {
       console.log(error);
@@ -129,9 +132,11 @@ const LottoProvider = ({ children }: { children: any }) => {
   const getLastRounds = async () => {
     if (!provider || !lottoContract || chainId != rightChainId) return;
     try {
+      if (isLoadingMoreRounds) return;
+      useInfiniteScrollStore.setState({ isLoadingMoreRounds: true });
       const currentLottoId = await lottoContract.lotteryId();
       const lastRounds = [];
-      for (let i = 1; i < 5; i++) {
+      for (let i = 1; i < step + 1; i++) {
         if (currentLottoId - i < 0) break;
         const round = await lottoContract.getLotteryStatus(currentLottoId - i);
         lastRounds.push({ id: currentLottoId - i, ...round });
@@ -140,13 +145,15 @@ const LottoProvider = ({ children }: { children: any }) => {
       const lastFetched = lastRounds[lastRounds.length - 1].id;
 
       useInfiniteScrollStore.setState({
-        start: lastFetched,
-        end: lastFetched - 4,
+        start: lastFetched - 1,
+        end: lastFetched - step,
       });
 
       useEthersStore.setState({ lastRounds: lastRounds });
     } catch (error) {
       console.log(error);
+    } finally {
+      useInfiniteScrollStore.setState({ isLoadingMoreRounds: false });
     }
   };
 
@@ -183,7 +190,6 @@ const LottoProvider = ({ children }: { children: any }) => {
   const refresh = async () => {
     if (!provider || !lottoContract || chainId != rightChainId) return;
     try {
-      console.log("refreshing");
       updateLastLotteryInfo();
       getUserStatus();
     } catch (error) {
