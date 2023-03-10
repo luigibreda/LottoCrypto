@@ -17,6 +17,7 @@ type EthersStore = {
   currentLottoInfo: any;
   lastRounds: any[];
   error: string | null;
+  lottoContract: any;
   connectWallet: () => Promise<any>;
   disconnectWallet: () => void;
 };
@@ -31,6 +32,7 @@ export const useEthersStore = create<EthersStore>()(
     lastRounds: [],
     tickets: [],
     error: null,
+    lottoContract: null,
     connectWallet: async () => {
       try {
         const wallet = await AuthServices.connect(get().provider!);

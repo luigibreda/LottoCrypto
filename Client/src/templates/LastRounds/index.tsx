@@ -4,15 +4,15 @@ import Ticket from "@/components/Ticket";
 import * as S from "./styles";
 import Button from "@/components/Button";
 import { useLotto } from "@/contexts/LottoContext";
+import { useInfiniteLotto } from "@/hooks/useInfiniteLotto";
 
 interface LastRoundsProps {}
 
 const LastRounds = ({}: LastRoundsProps) => {
   const lastRounds = useEthersStore((state) => state.lastRounds);
   const currentWallet = useEthersStore((state) => state.currentWallet);
-  const { claim, getMoreRounds } = useLotto();
-
-  console.log(lastRounds);
+  const { claim } = useLotto();
+  const { getMoreRounds } = useInfiniteLotto();
 
   return (
     <S.Container>
