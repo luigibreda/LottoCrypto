@@ -34,10 +34,7 @@ const NoTicket = () => {
           <S.Label>Ticket ID</S.Label>
           <P>?</P>
         </S.Line>
-        <S.Line>
-          <S.Label>Tickets sold</S.Label>
-          <P>?</P>
-        </S.Line>
+
         <S.Line>
           <S.Label>Status</S.Label>
           <P>?</P>

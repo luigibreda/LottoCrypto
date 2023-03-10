@@ -3,20 +3,27 @@ import * as S from "./styles";
 import Logo from "../Logo";
 import { useEthersStore } from "@/store/ethersStore";
 import Image from "next/image";
-import { Alert } from "@mui/material";
+import { changeNetwork } from "@/functions/changeNetwork";
 import { adminsWallets, rightChainId } from "@/constants";
 import Link from "next/link";
+import Button from "../Button";
 
 interface HeaderProps {}
 
 const Header = ({}: HeaderProps) => {
   const currentWallet = useEthersStore((state) => state.currentWallet);
+  const provider = useEthersStore((state) => state.provider);
   const chainId = useEthersStore((state) => state.chainId);
 
   return (
     <S.Container layout>
       {currentWallet && chainId != rightChainId && (
-        <Alert severity="error">Please connect to the MUMBAI network!</Alert>
+        <Button
+          onClick={() => changeNetwork(provider, rightChainId)}
+          color="black"
+        >
+          change network to Mumbai
+        </Button>
       )}
       {currentWallet && adminsWallets.includes(currentWallet) && (
         <S.LinkStyled href="/admin">Admin Panel</S.LinkStyled>

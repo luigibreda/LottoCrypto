@@ -5,6 +5,7 @@ import { useInfiniteScrollStore } from "@/store/infiniteScrollStore";
 export const useInfiniteLotto = () => {
   const chainId = useEthersStore((state) => state.chainId);
   const lottoContract = useEthersStore((state) => state.lottoContract);
+  const provider = useEthersStore((state) => state.provider);
   const step = useInfiniteScrollStore((state) => state.step);
   const start = useInfiniteScrollStore((state) => state.start);
   const end = useInfiniteScrollStore((state) => state.end);
@@ -17,6 +18,10 @@ export const useInfiniteLotto = () => {
   const getMoreRounds = async () => {
     if (!lottoContract || chainId != rightChainId) return;
     if (isLoadingMoreRounds) return;
+
+    const chainIdProvider = provider?._network?.chainId;
+    if (chainIdProvider != rightChainId) return;
+
     try {
       const lastLotteryId = await lottoContract.lotteryId();
       if (start < 0) return;

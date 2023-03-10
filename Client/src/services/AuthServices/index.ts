@@ -1,6 +1,6 @@
-import { useEthersStore } from "@/store/ethersStore";
 import { rightChainId } from "@/constants";
 import ethers from "ethers";
+import { changeNetwork } from "@/functions/changeNetwork";
 
 export const AuthServices = {
   connect: async (provider: ethers.providers.Web3Provider) => {
@@ -12,10 +12,7 @@ export const AuthServices = {
     }
 
     try {
-      await provider.send("wallet_switchEthereumChain", [
-        { chainId: `0x${rightChainId.toString(16)}` },
-      ]);
-      useEthersStore.setState({ chainId: rightChainId });
+      await changeNetwork(provider, rightChainId);
     } catch (switchError: any) {
       if (switchError.code === 4902) {
         return null;
