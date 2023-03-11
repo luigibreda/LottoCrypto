@@ -18,7 +18,7 @@ const LastRounds = () => {
   );
   const { claim } = useLotto();
   const { getMoreRounds, hasMoreRounds } = useInfiniteLotto();
-  const thresouldInPx = 250;
+  const thresouldInPx = 370;
 
   useEffect(() => {
     const handleScroll = () => {

@@ -19,6 +19,7 @@ export const useLotto = () => useContext(LottoContext);
 const LottoProvider = ({ children }: { children: any }) => {
   const chainId = useEthersStore((state) => state.chainId);
   const currentWallet = useEthersStore((state) => state.currentWallet);
+  const addLastRound = useEthersStore((state) => state.addLastRound);
   const { provider, signer } = useEthers();
   const lottoContractAddress = "0x72a20ce4c4eDa85aa88a34a3292a46689020A11b";
   const [lottoContract, setLottoContract] = useState<any>(null);
@@ -69,7 +70,6 @@ const LottoProvider = ({ children }: { children: any }) => {
 
   const getLastLottery = async () => {
     if (!provider || !lottoContract || chainId != rightChainId) return;
-
     try {
       const currentLottoId = await lottoContract.lotteryId();
       const lotteryStatus = await lottoContract.getLotteryStatus(
@@ -186,12 +186,7 @@ const LottoProvider = ({ children }: { children: any }) => {
         );
         const lastTicketTrated = { id: lastTicketId, ...lastRoundInfo };
 
-        useEthersStore.setState({
-          lastRounds: [
-            lastTicketTrated,
-            ...useEthersStore.getState().lastRounds,
-          ],
-        });
+        addLastRound(lastTicketTrated);
       }
     } catch (error) {
       console.log(error);

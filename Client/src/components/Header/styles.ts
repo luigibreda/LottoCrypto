@@ -3,6 +3,7 @@ import Link from "next/link";
 import styled from "styled-components";
 
 export const Container = styled(motion.div)`
+  padding-top: 40px;
   height: 100px;
   display: flex;
   align-items: center;

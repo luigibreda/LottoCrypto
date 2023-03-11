@@ -20,6 +20,7 @@ type EthersStore = {
   lottoContract: any;
   connectWallet: () => Promise<any>;
   disconnectWallet: () => void;
+  addLastRound: (ticket: any) => void;
 };
 
 export const useEthersStore = create<EthersStore>()(
@@ -44,6 +45,9 @@ export const useEthersStore = create<EthersStore>()(
     },
     disconnectWallet: () => {
       set({ currentWallet: null, tickets: [] });
+    },
+    addLastRound: (lastRound: any) => {
+      set((state) => ({ lastRounds: [lastRound, ...state.lastRounds] }));
     },
   }))
 );
