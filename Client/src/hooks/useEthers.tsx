@@ -17,10 +17,9 @@ export const useEthers = (): useEthersReturn => {
   useEffect(() => {
     if (!window.ethereum) return;
     try {
-      if (chainId != rightChainId && signer) return;
-
       const providerInstance = new ethers.providers.Web3Provider(
-        window.ethereum
+        window.ethereum,
+        "any"
       );
       const idChain = providerInstance?.getNetwork().then((network) => {
         useEthersStore.setState({ chainId: network.chainId });
@@ -37,7 +36,7 @@ export const useEthers = (): useEthersReturn => {
     window.ethereum.on("chainChanged", (idChain: string) => {
       useEthersStore.setState({ chainId: Number(idChain) });
     });
-  }, [chainId]);
+  }, []);
 
   useEffect(() => {
     if (!provider || !currentWallet) return;
