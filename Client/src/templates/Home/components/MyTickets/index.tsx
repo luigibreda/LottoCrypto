@@ -6,16 +6,14 @@ import { motion } from "framer-motion";
 import { useEthersStore } from "@/store/ethersStore";
 import NoTicket from "@/components/NoTicket";
 import { Pagination } from "@mui/material";
-import Linear from "@/components/LinearProgress";
-import { useCounter } from "./hooks/useCounter";
 import LottoInfo from "./components/LottoInfo";
+import Counter from "../../../../components/Counter";
 
 const MyTickets = () => {
   const [currentTicket, setCurrentTicket] = useState(0);
   const tickets = useEthersStore((state) => state.tickets);
   const currentWallet = useEthersStore((state) => state.currentWallet);
   const currentLottoInfo = useEthersStore((state) => state.currentLottoInfo);
-  const { timeLeft, progress } = useCounter();
 
   return (
     <>
@@ -70,12 +68,11 @@ const MyTickets = () => {
         </motion.div>
 
         {currentLottoInfo?.finishTrigger && (
-          <S.TimeLeft>
-            <Linear value={progress} />
-            <S.TimeLeftText>
-              {timeLeft.hours}h {timeLeft.minutes}m {timeLeft.seconds}s
-            </S.TimeLeftText>
-          </S.TimeLeft>
+          <Counter
+            startedTime={currentLottoInfo?.startedTime}
+            trigger={currentLottoInfo?.finishTrigger}
+            timeToFinish={currentLottoInfo?.timeToFinish}
+          />
         )}
       </S.Container>
     </>

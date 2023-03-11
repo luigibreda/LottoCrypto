@@ -25,5 +25,5 @@ export const RoundContainer = styled.div``;
 export const RoundManageArea = styled.div`
   display: flex;
   justify-content: center;
-  padding-top: 2px;
+  padding: 8px;
 `;

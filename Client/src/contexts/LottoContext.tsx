@@ -65,7 +65,7 @@ const LottoProvider = ({ children }: { children: any }) => {
     setInterval(() => {
       refresh();
       checkIfLastTicketIdChanged();
-    }, 10000);
+    }, 15000);
 
   const getLastLottery = async () => {
     if (!provider || !lottoContract || chainId != rightChainId) return;
@@ -84,18 +84,22 @@ const LottoProvider = ({ children }: { children: any }) => {
   const getUserStatus = async () => {
     if (!provider || !lottoContract || chainId != rightChainId) return;
 
-    const currentLottoId = await lottoContract.lotteryId();
-    const userStatusInLastLottery = await lottoContract.getUserStatus(
-      currentLottoId,
-      currentWallet
-    );
-    userStatusInLastLottery.hasTicket
-      ? useEthersStore.setState({
-          tickets: [...userStatusInLastLottery.tickets],
-        })
-      : useEthersStore.setState({
-          tickets: [],
-        });
+    try {
+      const currentLottoId = await lottoContract.lotteryId();
+      const userStatusInLastLottery = await lottoContract.getUserStatus(
+        currentLottoId,
+        currentWallet
+      );
+      userStatusInLastLottery.hasTicket
+        ? useEthersStore.setState({
+            tickets: [...userStatusInLastLottery.tickets],
+          })
+        : useEthersStore.setState({
+            tickets: [],
+          });
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   const buyTicket = async () => {
@@ -172,9 +176,6 @@ const LottoProvider = ({ children }: { children: any }) => {
   const checkIfLastTicketIdChanged = async () => {
     if (!provider || !lottoContract || chainId != rightChainId) return;
 
-    const chainIdProvider = provider?._network?.chainId;
-    if (chainIdProvider != rightChainId) return;
-
     try {
       const lastTicketId = (await lottoContract.lotteryId()) - 1;
       const lastTicketInStoreId = useEthersStore.getState().lastRounds[0].id;
@@ -199,9 +200,6 @@ const LottoProvider = ({ children }: { children: any }) => {
 
   const updateLastLotteryInfo = async () => {
     if (!provider || !lottoContract || chainId != rightChainId) return;
-
-    const chainIdProvider = provider?._network?.chainId;
-    if (chainIdProvider != rightChainId) return;
 
     const lastLottery = await getLastLottery();
     useEthersStore.setState({ currentLottoInfo: lastLottery });

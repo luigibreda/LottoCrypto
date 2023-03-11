@@ -7,6 +7,7 @@ import { useLotto } from "@/contexts/LottoContext";
 import { useInfiniteLotto } from "@/hooks/useInfiniteLotto";
 import { useEffect } from "react";
 import { useInfiniteScrollStore } from "@/store/infiniteScrollStore";
+import Counter from "@/components/Counter";
 
 const LastRounds = () => {
   const lastRounds = useEthersStore((state) => state.lastRounds);
@@ -17,7 +18,7 @@ const LastRounds = () => {
   );
   const { claim } = useLotto();
   const { getMoreRounds, hasMoreRounds } = useInfiniteLotto();
-  const thresouldInPx = 200;
+  const thresouldInPx = 250;
 
   useEffect(() => {
     const handleScroll = () => {
@@ -66,6 +67,11 @@ const LastRounds = () => {
                     >
                       Claim
                     </Button>
+                    <Counter
+                      startedTime={round?.timeToFinish}
+                      timeToFinish={round?.timeToClaim}
+                      trigger={true}
+                    />
                   </S.RoundManageArea>
                 )}
             </S.RoundContainer>

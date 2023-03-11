@@ -2,7 +2,7 @@ import styled from "styled-components";
 
 export const LinearProgressContainer = styled.div`
   width: 80%;
-  height: 5px;
+  height: 6px;
   background-color: #202020;
   border-radius: 5px;
   overflow: hidden;
